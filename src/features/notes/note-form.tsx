@@ -161,6 +161,38 @@ export function NoteForm({
             <Eye className="size-4" /> {preview ? "Edit" : "Preview"}
           </Button>
         </div>
+        <div className="text-muted-foreground mb-4 grid gap-2 rounded-2xl border px-4 py-3 text-xs leading-6 sm:grid-cols-2">
+          <p>
+            <code className="text-foreground">## Heading</code> section (
+            table of contents)
+            <br />
+            <code className="text-foreground">### Subheading</code> smaller
+            heading
+            <br />
+            <code className="text-foreground">**bold**</code>{" "}
+            <code className="text-foreground">*italic*</code>{" "}
+            <code className="text-foreground">`code`</code>
+            <br />
+            <code className="text-foreground">[label](https://…)</code> link
+          </p>
+          <p>
+            <code className="text-foreground">- item</code> or{" "}
+            <code className="text-foreground">1. item</code> lists
+            <br />
+            <code className="text-foreground">&gt; quote</code>{" "}
+            <code className="text-foreground">---</code> divider
+            <br />
+            <code className="text-foreground">```</code> fenced code block
+            <br />
+            GFM tables:{" "}
+            <code className="text-foreground">| col | col |</code>
+          </p>
+        </div>
+        <p className="text-muted-foreground mb-4 text-xs">
+          `#` (H1), images, HTML, and raw scripts are ignored. Use{" "}
+          <code className="text-foreground">##</code> and{" "}
+          <code className="text-foreground">###</code> only.
+        </p>
         {preview ? (
           <div className="bg-background min-h-96 rounded-2xl border p-6">
             <MarkdownContent body={body} />

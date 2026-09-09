@@ -1,7 +1,7 @@
 import { ArrowRight, Award, Mail, MapPin, Sparkles } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Reveal } from "@/components/shared/reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -10,12 +10,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SkillHolders } from "@/components/shared/skill-holders";
 import { siteConfig } from "@/config/site";
 import { ProjectCard } from "@/features/projects/project-card";
-import { getPublicContent } from "@/lib/server/public-content";
+import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
 import { formatDate } from "@/lib/utils";
 
 export default async function HomePage() {
   const { profile, projects, notes, skills, timeline, achievements } =
     await getPublicContent();
+  const identity = siteIdentity(profile);
   const selectedProjects = projects
     .filter((project) => project.featured)
     .slice(0, 2);
@@ -32,7 +33,7 @@ export default async function HomePage() {
           {
             "@context": "https://schema.org",
             "@type": "Person",
-            name: profile.name,
+            name: identity.name,
             jobTitle: profile.professionalTitle,
             url: siteConfig.url,
             sameAs: profile.socialLinks.map((link) => link.url),
@@ -40,7 +41,7 @@ export default async function HomePage() {
           {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: `${profile.name} — Portfolio`,
+            name: identity.name,
             url: siteConfig.url,
           },
         ]}
@@ -76,7 +77,7 @@ export default async function HomePage() {
           <div className="bg-accent/10 absolute -inset-8 -z-10 rounded-full blur-3xl" />
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border bg-[linear-gradient(145deg,var(--muted),color-mix(in_srgb,var(--accent)_16%,var(--background)))] shadow-2xl">
             {profile.profilePhotoUrl ? (
-              <Image
+              <CmsImage
                 alt={`${profile.name} portrait`}
                 className="object-cover"
                 fill

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowUpRight, Code2 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { JsonLd } from "@/components/shared/json-ld";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
@@ -116,7 +116,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         <div className="container">
           <div className="relative aspect-[16/8] overflow-hidden rounded-[2.5rem] border bg-[linear-gradient(135deg,var(--muted),color-mix(in_srgb,var(--accent)_18%,var(--background)))]">
             {project.coverImageUrl ? (
-              <Image
+              <CmsImage
                 alt={`${project.title} cover`}
                 className="object-cover"
                 fill
@@ -177,7 +177,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 className="relative aspect-[4/3] overflow-hidden rounded-3xl border"
                 key={image}
               >
-                <Image
+                <CmsImage
                   alt={`${project.title} gallery image ${index + 1}`}
                   className="object-cover"
                   fill

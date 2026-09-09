@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowDownToLine } from "lucide-react";
-import Image from "next/image";
-
+import { CmsImage } from "@/components/shared/cms-image";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { SocialLinks } from "@/components/shared/social-links";
 import { Button } from "@/components/ui/button";
@@ -169,13 +168,12 @@ export default async function AboutPage() {
                   <Card className="h-full overflow-hidden">
                     <div className="bg-muted relative aspect-4/3 overflow-hidden">
                       {imageUrl ? (
-                        <Image
+                        <CmsImage
                           alt={`${item.title} certificate`}
                           className="object-contain p-3"
                           fill
                           sizes="(min-width: 1280px) 360px, (min-width: 640px) 50vw, 100vw"
                           src={imageUrl}
-                          unoptimized={imageUrl.startsWith("/")}
                         />
                       ) : (
                         <div className="text-muted-foreground/40 absolute inset-0 grid place-items-center text-sm font-medium tracking-wide uppercase">

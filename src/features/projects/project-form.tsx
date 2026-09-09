@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, WandSparkles } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -13,6 +12,7 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { Button } from "@/components/ui/button";
 import {
   FieldError,
@@ -215,7 +215,7 @@ export function ProjectForm({
           <ProjectField label="Cover image URL" name="coverImageUrl" />
           {cover ? (
             <div className="relative aspect-video overflow-hidden rounded-2xl border">
-              <Image
+              <CmsImage
                 alt="Cover preview"
                 className="object-cover"
                 fill

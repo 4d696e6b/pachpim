@@ -22,9 +22,13 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   poweredByHeader: false,
   images: {
-    localPatterns: [{ pathname: "/api/media/**" }],
+    localPatterns: [
+      { pathname: "/api/media/**" },
+      { pathname: "/api/media/**/file" },
+    ],
     remotePatterns: [
       { protocol: "https", hostname: "*.googleusercontent.com" },
+      { protocol: "https", hostname: "*.vercel.app" },
     ],
   },
   async headers() {

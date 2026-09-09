@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { Badge } from "@/components/ui/form-controls";
 import type { PublicProject } from "@/lib/server/public-content";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ export function ProjectCard({
       >
         <div className="relative aspect-[16/10] overflow-hidden bg-[linear-gradient(135deg,var(--muted),color-mix(in_srgb,var(--accent)_18%,var(--background)))]">
           {project.coverImageUrl ? (
-            <Image
+            <CmsImage
               alt={`${project.title} cover`}
               className="object-cover transition duration-500 group-hover:scale-[1.03]"
               fill

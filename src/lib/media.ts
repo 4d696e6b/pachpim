@@ -20,6 +20,21 @@ export function isAcceptedMediaType(value: string): value is AcceptedMediaType {
   return (ACCEPTED_MEDIA_TYPES as readonly string[]).includes(value);
 }
 
+export function cmsMediaPath(value: string) {
+  const trimmed = value.trim();
+  try {
+    const parsed = new URL(trimmed, "http://local.invalid");
+    if (parsed.pathname.startsWith("/api/media/")) return parsed.pathname;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+export function shouldBypassImageOptimizer(src: string) {
+  return Boolean(cmsMediaPath(src)) || src.startsWith("/");
+}
+
 export function isImageAssetUrl(value: string) {
   if (!isSafeUrl(value, { allowRelative: true })) return false;
   const input = value.trim().toLowerCase();

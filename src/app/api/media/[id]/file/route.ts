@@ -68,7 +68,7 @@ export async function GET(
       return NextResponse.json({ error: "Not found." }, { status: 404 });
     }
 
-    return new Response(bytes, {
+    return new Response(Uint8Array.from(bytes), {
       headers: {
         "Content-Type": contentType,
         "Content-Length": String(bytes.byteLength),

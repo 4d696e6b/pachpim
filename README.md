@@ -72,7 +72,7 @@ Open `http://localhost:3000`.
    - `FIREBASE_PROJECT_ID`
    - `FIREBASE_CLIENT_EMAIL`
    - `FIREBASE_PRIVATE_KEY`
-7. Keep the private key quoted with escaped `\n` characters on Vercel. The Admin initializer converts them to real newlines.
+7. `FIREBASE_PRIVATE_KEY` is the JSON `private_key` field (including `-----BEGIN PRIVATE KEY-----`). In `.env.local`, keep it in quotes with `\n`. In the Vercel dashboard, paste **one line** with `\n` and **no wrapping quotes** — extra quotes make OpenSSL fail with `ERR_OSSL_UNSUPPORTED`.
 8. Set `ADMIN_EMAIL_ALLOWLIST` to one or more comma-separated administrator emails.
 9. Generate `RATE_LIMIT_SECRET` with at least 32 random bytes, for example `openssl rand -base64 48`.
 

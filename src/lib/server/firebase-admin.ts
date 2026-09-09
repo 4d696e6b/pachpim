@@ -8,6 +8,8 @@ import {
 import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
 
+import { normalizeFirebasePrivateKey } from "@/lib/server/firebase-private-key";
+
 let app: App | undefined;
 
 function required(name: string) {
@@ -26,7 +28,7 @@ export function getAdminApp() {
     credential: cert({
       projectId: required("FIREBASE_PROJECT_ID"),
       clientEmail: required("FIREBASE_CLIENT_EMAIL"),
-      privateKey: required("FIREBASE_PRIVATE_KEY").replace(/\\n/g, "\n"),
+      privateKey: normalizeFirebasePrivateKey(required("FIREBASE_PRIVATE_KEY")),
     }),
   });
   return app;

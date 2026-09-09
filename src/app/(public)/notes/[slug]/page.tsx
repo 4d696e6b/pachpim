@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/form-controls";
@@ -92,6 +93,18 @@ export default async function NoteDetailPage({ params }: Props) {
             {formatDate(note.publishedAt)} · {note.readingTime} min read
           </p>
         </header>
+        {note.coverImageUrl ? (
+          <div className="relative mx-auto mt-10 aspect-[16/8] max-w-5xl overflow-hidden rounded-[2rem] border">
+            <CmsImage
+              alt={`${note.title} cover`}
+              className="object-cover"
+              fill
+              priority
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              src={note.coverImageUrl}
+            />
+          </div>
+        ) : null}
         <div className="mx-auto mt-14 grid max-w-5xl gap-12 lg:grid-cols-[220px_1fr]">
           <aside className="hidden lg:block">
             <nav aria-label="Table of contents" className="sticky top-28">

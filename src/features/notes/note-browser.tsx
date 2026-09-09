@@ -4,6 +4,7 @@ import { BookOpen, Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Badge, Input } from "@/components/ui/form-controls";
 import type { PublicNote } from "@/lib/server/public-content";
@@ -71,9 +72,22 @@ export function NoteBrowser({ notes }: { notes: PublicNote[] }) {
                     {note.excerpt}
                   </p>
                 </div>
-                <p className="text-muted-foreground text-sm">
-                  {formatDate(note.publishedAt)} · {note.readingTime} min read
-                </p>
+                <div className="flex flex-col items-start gap-3 md:items-end">
+                  {note.coverImageUrl ? (
+                    <div className="relative h-24 w-36 overflow-hidden rounded-2xl border">
+                      <CmsImage
+                        alt=""
+                        className="object-cover"
+                        fill
+                        sizes="144px"
+                        src={note.coverImageUrl}
+                      />
+                    </div>
+                  ) : null}
+                  <p className="text-muted-foreground text-sm">
+                    {formatDate(note.publishedAt)} · {note.readingTime} min read
+                  </p>
+                </div>
               </Link>
             </article>
           ))}

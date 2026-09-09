@@ -1,6 +1,9 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import { CmsImage } from "@/components/shared/cms-image";
+import { isImageAssetUrl } from "@/lib/media";
+import { isSafeUrl } from "@/lib/security";
 import { slugify } from "@/lib/utils";
 
 function safeUrl(url: string) {
@@ -11,6 +14,13 @@ function safeUrl(url: string) {
   } catch {
     return "";
   }
+}
+
+function safeImageUrl(url: string) {
+  const input = url.trim();
+  if (!isSafeUrl(input, { allowRelative: true })) return "";
+  if (!isImageAssetUrl(input) && !input.startsWith("/api/media/")) return "";
+  return input;
 }
 
 export function getTableOfContents(body: string) {
@@ -49,6 +59,7 @@ export function MarkdownContent({ body }: { body: string }) {
           "tr",
           "th",
           "td",
+          "img",
         ]}
         components={{
           h2: ({ children }) => (
@@ -67,6 +78,32 @@ export function MarkdownContent({ body }: { body: string }) {
               {children}
             </a>
           ),
+          img: ({ src = "", alt = "" }) => {
+            const url = safeImageUrl(String(src));
+            if (!url) return null;
+            if (url.startsWith("/api/media/")) {
+              return (
+                <span className="note-photo relative my-8 block aspect-video overflow-hidden rounded-2xl border">
+                  <CmsImage
+                    alt={alt || "Note photo"}
+                    className="object-cover"
+                    fill
+                    sizes="(min-width: 768px) 720px, 100vw"
+                    src={url}
+                  />
+                </span>
+              );
+            }
+            return (
+              // Remote HTTPS photos skip the optimizer.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                alt={alt || "Note photo"}
+                className="my-8 h-auto w-full rounded-2xl border"
+                src={url}
+              />
+            );
+          },
         }}
         remarkPlugins={[remarkGfm]}
         skipHtml

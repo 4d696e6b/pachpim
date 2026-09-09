@@ -116,8 +116,15 @@ select {
   font-size: 1.375rem;
 }
 
-.prose-custom :is(p, ul, ol, pre) {
+.prose-custom :is(p, ul, ol, pre, figure, .note-photo) {
   margin-top: 1.25rem;
+}
+
+.prose-custom img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
 }
 
 .prose-custom code {

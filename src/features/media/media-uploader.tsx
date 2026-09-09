@@ -7,7 +7,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { MAX_MEDIA_BYTES } from "@/lib/media";
 
-export function MediaUploader({ onUploaded }: { onUploaded?: () => void }) {
+export function MediaUploader({
+  onUploaded,
+}: {
+  onUploaded?: (id?: string) => void;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const xhrRef = useRef<XMLHttpRequest | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
@@ -33,7 +37,14 @@ export function MediaUploader({ onUploaded }: { onUploaded?: () => void }) {
       if (xhr.status >= 200 && xhr.status < 300) {
         toast.success("File saved to Firestore.");
         if (inputRef.current) inputRef.current.value = "";
-        onUploaded?.();
+        const payload = (() => {
+          try {
+            return JSON.parse(xhr.responseText) as { id?: string };
+          } catch {
+            return null;
+          }
+        })();
+        onUploaded?.(payload?.id);
         return;
       }
       const body = (() => {

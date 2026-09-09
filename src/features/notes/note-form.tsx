@@ -3,10 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, Save, WandSparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { Button } from "@/components/ui/button";
 import {
   FieldError,
@@ -22,6 +23,7 @@ import {
   type NoteFormValues,
 } from "@/features/notes/note-form-schema";
 import { useUnsavedChanges } from "@/hooks/use-unsaved-changes";
+import { mediaFileUrl } from "@/lib/media";
 import { slugify } from "@/lib/utils";
 
 const defaults: NoteFormValues = {
@@ -59,6 +61,41 @@ export function NoteForm({
   useUnsavedChanges(isDirty && !saving);
   const title = useWatch({ control, name: "title" });
   const body = useWatch({ control, name: "body" });
+  const cover = useWatch({ control, name: "coverImageUrl" });
+  const bodyRef = useRef<HTMLTextAreaElement | null>(null);
+  const { ref: bodyRegisterRef, ...bodyField } = register("body");
+
+  function insertIntoBody(snippet: string) {
+    const field = bodyRef.current;
+    if (!field) {
+      setValue("body", `${body}${snippet}`, { shouldDirty: true });
+      return;
+    }
+    const start = field.selectionStart;
+    const end = field.selectionEnd;
+    const next = `${body.slice(0, start)}${snippet}${body.slice(end)}`;
+    setValue("body", next, { shouldDirty: true, shouldValidate: true });
+    requestAnimationFrame(() => {
+      const cursor = start + snippet.length;
+      field.focus();
+      field.setSelectionRange(cursor, cursor);
+    });
+  }
+
+  async function addPhotoToNote(id?: string) {
+    if (!id) return;
+    const url = mediaFileUrl(id);
+    await fetch(`/api/media/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ visibility: "public" }),
+    }).catch(() => undefined);
+    insertIntoBody(`\n\n![Photo](${url})\n\n`);
+    if (!cover?.trim()) {
+      setValue("coverImageUrl", url, { shouldDirty: true });
+    }
+    toast.success("Photo inserted. Publish the note when you are ready.");
+  }
 
   async function submit(values: NoteFormValues) {
     setSaving(true);
@@ -141,11 +178,24 @@ export function NoteForm({
           <Label htmlFor="coverImageUrl">Cover image URL</Label>
           <Input id="coverImageUrl" {...register("coverImageUrl")} />
           <FieldError>{errors.coverImageUrl?.message}</FieldError>
+          {cover?.trim() ? (
+            <div className="relative mt-1 aspect-video overflow-hidden rounded-2xl border">
+              <CmsImage
+                alt="Cover preview"
+                className="object-cover"
+                fill
+                sizes="700px"
+                src={cover}
+              />
+            </div>
+          ) : null}
         </div>
-        <MediaUploader />
+        <MediaUploader onUploaded={addPhotoToNote} />
         <p className="text-muted-foreground text-xs">
-          Files are stored in Firestore (700 KB max). Publish in Media, then
-          paste the copied URL here.
+          Upload a photo here to insert{" "}
+          <code className="text-foreground">![Photo](/api/media/…/file)</code>{" "}
+          into the note. Files stay under 700 KB. Make it public in Media if the
+          image does not appear.
         </p>
       </section>
 
@@ -174,6 +224,9 @@ export function NoteForm({
             <code className="text-foreground">`code`</code>
             <br />
             <code className="text-foreground">[label](https://…)</code> link
+            <br />
+            <code className="text-foreground">![alt](/api/media/id/file)</code>{" "}
+            photo
           </p>
           <p>
             <code className="text-foreground">- item</code> or{" "}
@@ -189,9 +242,10 @@ export function NoteForm({
           </p>
         </div>
         <p className="text-muted-foreground mb-4 text-xs">
-          `#` (H1), images, HTML, and raw scripts are ignored. Use{" "}
-          <code className="text-foreground">##</code> and{" "}
-          <code className="text-foreground">###</code> only.
+          `#` (H1), HTML, and raw scripts are ignored. Use{" "}
+          <code className="text-foreground">##</code> /{" "}
+          <code className="text-foreground">###</code> for headings, and{" "}
+          <code className="text-foreground">![alt](url)</code> for photos.
         </p>
         {preview ? (
           <div className="bg-background min-h-96 rounded-2xl border p-6">
@@ -202,7 +256,11 @@ export function NoteForm({
             <Textarea
               className="min-h-[32rem] font-mono text-sm leading-6"
               id="body"
-              {...register("body")}
+              {...bodyField}
+              ref={(element) => {
+                bodyRegisterRef(element);
+                bodyRef.current = element;
+              }}
             />
             <FieldError>{errors.body?.message}</FieldError>
           </>

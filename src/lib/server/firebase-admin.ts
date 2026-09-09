@@ -42,6 +42,15 @@ export function getAdminFirestore() {
   return getFirestore(getAdminApp());
 }
 
+export async function getGoogleAccessToken() {
+  const credential = getAdminApp().options.credential;
+  if (!credential) {
+    throw new Error("Missing Firebase Admin credential");
+  }
+  const token = await credential.getAccessToken();
+  return token.access_token;
+}
+
 function lazyProxy<T extends object>(factory: () => T): T {
   return new Proxy({} as T, {
     get(_target, property) {

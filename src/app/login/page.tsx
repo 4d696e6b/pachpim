@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { connection } from "next/server";
-import { redirect } from "next/navigation";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { LoginForm } from "@/features/auth/login-form";
-import { getOptionalSession } from "@/lib/auth/session";
-
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
 export const metadata: Metadata = {
   title: "Admin sign in",
@@ -17,10 +11,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function LoginPage() {
-  await connection();
-  if (await getOptionalSession()) redirect("/admin");
-
+export default function LoginPage() {
   return (
     <main className="grid min-h-screen place-items-center bg-[radial-gradient(circle_at_top,var(--muted),transparent_52%)] p-4">
       <Card className="bg-card/90 w-full max-w-md backdrop-blur">

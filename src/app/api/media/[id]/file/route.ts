@@ -1,39 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { getAdminFirestore } from "@/lib/server/firebase-admin";
+import {
+  fetchFirestoreDocument,
+  firestoreBytesBase64,
+  firestoreString,
+} from "@/lib/server/firestore-rest";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-function asBuffer(value: unknown): Buffer | null {
-  if (!value) return null;
-  if (Buffer.isBuffer(value)) return Buffer.from(value);
-  if (value instanceof Uint8Array) return Buffer.from(value);
-  if (typeof value === "string") {
-    const payload = value.includes(",")
-      ? value.slice(value.indexOf(",") + 1)
-      : value;
-    const decoded = Buffer.from(payload, "base64");
-    return decoded.length ? decoded : null;
-  }
-  if (typeof value === "object") {
-    const record = value as {
-      toUint8Array?: () => Uint8Array;
-      toBase64?: () => string;
-      data?: unknown;
-    };
-    if (typeof record.toUint8Array === "function") {
-      return Buffer.from(record.toUint8Array());
-    }
-    if (typeof record.toBase64 === "function") {
-      return Buffer.from(record.toBase64(), "base64");
-    }
-    if (Array.isArray(record.data)) {
-      return Buffer.from(record.data as number[]);
-    }
-  }
-  return null;
-}
 
 export async function GET(
   _request: Request,
@@ -45,37 +19,24 @@ export async function GET(
       return NextResponse.json({ error: "Not found." }, { status: 404 });
     }
 
-    const snapshot = await getAdminFirestore().collection("media").doc(id).get();
-    if (!snapshot.exists) {
+    const document = await fetchFirestoreDocument(`media/${id}`);
+    const fields = document?.fields;
+    if (!fields) {
       return NextResponse.json({ error: "Not found." }, { status: 404 });
     }
 
     const isPublic =
-      snapshot.get("visibility") === "public" &&
-      snapshot.get("status") === "published";
-    if (!isPublic) {
-      const { getOptionalSession } = await import("@/lib/auth/session");
-      if (!(await getOptionalSession())) {
-        return NextResponse.json({ error: "Not found." }, { status: 404 });
-      }
-    }
-
-    const bytes = asBuffer(snapshot.get("bytes"));
-    const contentType = String(
-      snapshot.get("contentType") ?? "application/octet-stream",
-    );
-    if (!bytes?.length) {
+      firestoreString(fields, "visibility") === "public" &&
+      firestoreString(fields, "status") === "published";
+    const base64 = firestoreBytesBase64(fields, "bytes");
+    if (!isPublic || !base64) {
       return NextResponse.json({ error: "Not found." }, { status: 404 });
     }
 
-    return new Response(Uint8Array.from(bytes), {
-      headers: {
-        "Content-Type": contentType,
-        "Content-Length": String(bytes.byteLength),
-        "Cache-Control": isPublic
-          ? "public, max-age=3600, stale-while-revalidate=86400"
-          : "private, no-store",
-      },
+    return NextResponse.json({
+      contentType:
+        firestoreString(fields, "contentType") || "application/octet-stream",
+      base64,
     });
   } catch (error) {
     console.error(

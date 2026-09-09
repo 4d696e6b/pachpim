@@ -1,10 +1,10 @@
 "use client";
 
 import { Copy, File, ImageIcon, Lock, Trash2, Unlock } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { CmsImage } from "@/components/shared/cms-image";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -62,13 +62,12 @@ export function MediaLibrary({ initialItems }: { initialItems: MediaItem[] }) {
             <CardContent className="pt-6">
               {item.contentType.startsWith("image/") ? (
                 <div className="bg-muted relative mb-5 aspect-video overflow-hidden rounded-xl">
-                  <Image
+                  <CmsImage
                     alt={`Preview of ${item.name}`}
                     className="object-cover"
                     fill
                     sizes="360px"
                     src={mediaFileUrl(item.id)}
-                    unoptimized
                   />
                 </div>
               ) : null}

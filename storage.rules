@@ -1,0 +1,115 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function isPublic() {
+      return resource != null
+        && resource.metadata != null
+        && resource.metadata.visibility == 'public';
+    }
+
+    function hasValidVisibilityMetadata() {
+      return request.resource.metadata != null
+        && request.resource.metadata.keys().hasAll(['visibility', 'ownerId'])
+        && request.resource.metadata.visibility in ['private', 'public']
+        && request.resource.metadata.ownerId == request.auth.uid;
+    }
+
+    function isImage(name, maxBytes) {
+      return request.resource.size <= maxBytes
+        && request.resource.contentType.matches(
+          'image/(jpeg|png|webp|gif|avif)'
+        )
+        && name.matches('.*[.](jpg|jpeg|png|webp|gif|avif)$');
+    }
+
+    function isVideo(name, maxBytes) {
+      return request.resource.size <= maxBytes
+        && request.resource.contentType.matches('video/(mp4|webm|quicktime)')
+        && name.matches('.*[.](mp4|webm|mov)$');
+    }
+
+    function isAudio(name, maxBytes) {
+      return request.resource.size <= maxBytes
+        && request.resource.contentType.matches(
+          'audio/(mpeg|mp4|ogg|wav|webm)'
+        )
+        && name.matches('.*[.](mp3|m4a|ogg|wav|webm)$');
+    }
+
+    function isPdf(name, maxBytes) {
+      return request.resource.size <= maxBytes
+        && request.resource.contentType == 'application/pdf'
+        && name.matches('.*[.]pdf$');
+    }
+
+    function isValidUpload() {
+      return hasValidVisibilityMetadata();
+    }
+
+    match /users/{uid}/profile/{path=**} {
+      allow get: if isAdmin() || isPublic();
+      allow list: if isAdmin();
+      allow create, update: if isAdmin()
+        && isValidUpload()
+        && isImage(request.resource.name, 5 * 1024 * 1024);
+      allow delete: if isAdmin();
+    }
+
+    match /projects/{projectId}/{path=**} {
+      allow get: if isAdmin() || isPublic();
+      allow list: if isAdmin();
+      allow create, update: if isAdmin()
+        && isValidUpload()
+        && (
+          isImage(request.resource.name, 15 * 1024 * 1024)
+          || isVideo(request.resource.name, 100 * 1024 * 1024)
+          || isPdf(request.resource.name, 20 * 1024 * 1024)
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /notes/{noteId}/{path=**} {
+      allow get: if isAdmin() || isPublic();
+      allow list: if isAdmin();
+      allow create, update: if isAdmin()
+        && isValidUpload()
+        && (
+          isImage(request.resource.name, 10 * 1024 * 1024)
+          || isPdf(request.resource.name, 15 * 1024 * 1024)
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /resumes/{path=**} {
+      allow get: if isAdmin() || isPublic();
+      allow list: if isAdmin();
+      allow create, update: if isAdmin()
+        && isValidUpload()
+        && isPdf(request.resource.name, 10 * 1024 * 1024);
+      allow delete: if isAdmin();
+    }
+
+    match /media/{path=**} {
+      allow get: if isAdmin() || isPublic();
+      allow list: if isAdmin();
+      allow create, update: if isAdmin()
+        && isValidUpload()
+        && (
+          isImage(request.resource.name, 15 * 1024 * 1024)
+          || isVideo(request.resource.name, 100 * 1024 * 1024)
+          || isAudio(request.resource.name, 30 * 1024 * 1024)
+          || isPdf(request.resource.name, 20 * 1024 * 1024)
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

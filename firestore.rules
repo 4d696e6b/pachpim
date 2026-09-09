@@ -1,0 +1,366 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    function hasValidAuditFields(data) {
+      return data.keys().hasAll(['createdAt', 'updatedAt'])
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function hasValidCreateAudit(data) {
+      return hasValidAuditFields(data)
+        && data.createdAt == request.time
+        && data.updatedAt == request.time;
+    }
+
+    function hasValidUpdateAudit() {
+      return hasValidAuditFields(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    function hasValidPublicationFields(data) {
+      return data.keys().hasAll(['status', 'visibility'])
+        && data.status in ['draft', 'published', 'archived']
+        && data.visibility in ['private', 'public', 'unlisted']
+        && (!('slug' in data)
+          || (data.slug is string && data.slug.size() > 0 && data.slug.size() <= 160))
+        && (!('title' in data)
+          || (data.title is string && data.title.size() <= 240))
+        && (!('sortOrder' in data) || data.sortOrder is number)
+        && (!('publishedAt' in data)
+          || data.publishedAt == null
+          || data.publishedAt is timestamp);
+    }
+
+    function isPubliclyReadable() {
+      return resource.data.status == 'published'
+        && resource.data.visibility == 'public';
+    }
+
+    function isValidContentCreate() {
+      return hasValidCreateAudit(request.resource.data)
+        && hasValidPublicationFields(request.resource.data);
+    }
+
+    function isValidContentUpdate() {
+      return hasValidUpdateAudit()
+        && hasValidPublicationFields(request.resource.data);
+    }
+
+    function isValidUserCreate(uid) {
+      let data = request.resource.data;
+      return data.keys().hasOnly([
+          'uid',
+          'email',
+          'displayName',
+          'photoURL',
+          'preferences',
+          'role',
+          'admin',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasAll([
+          'uid',
+          'email',
+          'role',
+          'admin',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.uid == uid
+        && data.email is string
+        && data.email.size() > 3
+        && data.email.size() <= 320
+        && data.role in ['user', 'editor', 'admin']
+        && data.admin is bool
+        && (!('displayName' in data)
+          || (data.displayName is string && data.displayName.size() <= 120))
+        && (!('photoURL' in data)
+          || (data.photoURL is string && data.photoURL.size() <= 2048))
+        && hasValidCreateAudit(data);
+    }
+
+    function isValidAdminUserUpdate(uid) {
+      let data = request.resource.data;
+      return data.keys().hasOnly([
+          'uid',
+          'email',
+          'displayName',
+          'photoURL',
+          'preferences',
+          'role',
+          'admin',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasAll([
+          'uid',
+          'email',
+          'role',
+          'admin',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.uid == uid
+        && data.email is string
+        && data.email.size() > 3
+        && data.email.size() <= 320
+        && data.role in ['user', 'editor', 'admin']
+        && data.admin is bool
+        && (!('displayName' in data)
+          || (data.displayName is string && data.displayName.size() <= 120))
+        && (!('photoURL' in data)
+          || (data.photoURL is string && data.photoURL.size() <= 2048))
+        && hasValidUpdateAudit();
+    }
+
+    function isValidSelfUserCreate(uid) {
+      return isSignedIn()
+        && request.auth.uid == uid
+        && isValidUserCreate(uid)
+        && request.resource.data.role == 'user'
+        && request.resource.data.admin == false
+        && (!('email' in request.auth.token)
+          || request.resource.data.email == request.auth.token.email);
+    }
+
+    function isValidSelfUserUpdate(uid) {
+      return isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.admin == resource.data.admin
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'displayName',
+          'photoURL',
+          'preferences',
+          'updatedAt'
+        ])
+        && (!('displayName' in request.resource.data)
+          || (request.resource.data.displayName is string
+            && request.resource.data.displayName.size() <= 120))
+        && (!('photoURL' in request.resource.data)
+          || (request.resource.data.photoURL is string
+            && request.resource.data.photoURL.size() <= 2048))
+        && hasValidUpdateAudit();
+    }
+
+    function isValidMessageCreate() {
+      let data = request.resource.data;
+      return data.keys().hasOnly([
+          'name',
+          'email',
+          'phone',
+          'subject',
+          'message',
+          'source',
+          'status',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasAll([
+          'name',
+          'email',
+          'message',
+          'status',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.name is string
+        && data.name.size() > 0
+        && data.name.size() <= 120
+        && data.email is string
+        && data.email.size() > 3
+        && data.email.size() <= 320
+        && data.email.matches('^[^@]+@[^@]+[.][^@]+$')
+        && data.message is string
+        && data.message.size() > 0
+        && data.message.size() <= 10000
+        && data.status == 'new'
+        && (!('phone' in data)
+          || (data.phone is string && data.phone.size() <= 40))
+        && (!('subject' in data)
+          || (data.subject is string && data.subject.size() <= 240))
+        && (!('source' in data)
+          || (data.source is string && data.source.size() <= 120))
+        && hasValidCreateAudit(data);
+    }
+
+    function isValidAdminMessageWrite() {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+          'name',
+          'email',
+          'message',
+          'status',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.name is string
+        && data.email is string
+        && data.message is string
+        && data.status in ['unread', 'read', 'replied', 'archived', 'spam'];
+    }
+
+    function isValidSlugReservation(slug) {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+          'id',
+          'slug',
+          'kind',
+          'entityId',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.id == slug
+        && data.slug is string
+        && data.slug.size() > 0
+        && data.slug.size() <= 160
+        && data.slug.matches('^[a-z0-9]+(-[a-z0-9]+)*$')
+        && data.kind in ['project', 'note']
+        && data.entityId is string
+        && data.entityId.size() > 0
+        && data.entityId.size() <= 150;
+    }
+
+    function isValidRateLimit() {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+          'id',
+          'count',
+          'windowStart',
+          'expiresAt',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.id is string
+        && data.id.size() > 0
+        && data.id.size() <= 256
+        && data.count is int
+        && data.count >= 0
+        && data.windowStart is timestamp
+        && data.expiresAt is timestamp
+        && data.expiresAt > data.windowStart;
+    }
+
+    match /users/{uid} {
+      allow get: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow list: if isAdmin();
+      allow create: if (isAdmin() && isValidUserCreate(uid))
+        || isValidSelfUserCreate(uid);
+      allow update: if (isAdmin() && isValidAdminUserUpdate(uid))
+        || isValidSelfUserUpdate(uid);
+      allow delete: if isAdmin();
+    }
+
+    match /{collectionName}/{documentId} {
+      allow get, list: if collectionName in [
+          'profile',
+          'projects',
+          'notes',
+          'skills',
+          'experiences',
+          'education',
+          'certifications',
+          'achievements',
+          'media',
+          'siteSettings'
+        ]
+        && (isAdmin() || isPubliclyReadable());
+
+      allow create: if collectionName in [
+          'profile',
+          'projects',
+          'notes',
+          'skills',
+          'experiences',
+          'education',
+          'certifications',
+          'achievements',
+          'media',
+          'siteSettings'
+        ]
+        && isAdmin()
+        && isValidContentCreate();
+
+      allow update: if collectionName in [
+          'profile',
+          'projects',
+          'notes',
+          'skills',
+          'experiences',
+          'education',
+          'certifications',
+          'achievements',
+          'media',
+          'siteSettings'
+        ]
+        && isAdmin()
+        && isValidContentUpdate();
+
+      allow delete: if collectionName in [
+          'profile',
+          'projects',
+          'notes',
+          'skills',
+          'experiences',
+          'education',
+          'certifications',
+          'achievements',
+          'media',
+          'siteSettings'
+        ]
+        && isAdmin();
+    }
+
+    match /messages/{messageId} {
+      allow get, list: if isAdmin();
+      allow create: if isAdmin()
+        && isValidAdminMessageWrite()
+        && hasValidCreateAudit(request.resource.data);
+      allow update: if isAdmin()
+        && isValidAdminMessageWrite()
+        && hasValidUpdateAudit();
+      allow delete: if isAdmin();
+    }
+
+    match /slugReservations/{slug} {
+      allow get, list: if isAdmin();
+      allow create: if isAdmin()
+        && isValidSlugReservation(slug)
+        && hasValidCreateAudit(request.resource.data);
+      allow update: if isAdmin()
+        && isValidSlugReservation(slug)
+        && request.resource.data.slug == resource.data.slug
+        && hasValidUpdateAudit();
+      allow delete: if isAdmin();
+    }
+
+    match /rateLimits/{limitId} {
+      allow get, list: if isAdmin();
+      allow create: if isAdmin()
+        && isValidRateLimit()
+        && hasValidCreateAudit(request.resource.data);
+      allow update: if isAdmin()
+        && isValidRateLimit()
+        && hasValidUpdateAudit();
+      allow delete: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

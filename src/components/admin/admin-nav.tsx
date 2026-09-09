@@ -15,7 +15,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type CSSProperties } from "react";
 
+import { SiteMark } from "@/components/shared/site-mark";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -72,8 +74,13 @@ function Navigation({
 export function AdminSidebar() {
   return (
     <aside className="border-border bg-card fixed inset-y-0 left-0 hidden w-64 border-r p-5 lg:block">
-      <Link className="mb-10 block font-semibold tracking-tight" href="/">
-        Portfolio<span className="text-accent">.</span>
+      <Link
+        className="mb-10 flex items-center gap-2 font-semibold tracking-tight"
+        href="/"
+      >
+        <SiteMark className="size-7 rounded-lg" />
+        {siteConfig.shortName}
+        <span className="text-accent">.</span>
       </Link>
       <Navigation />
     </aside>

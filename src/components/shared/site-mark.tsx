@@ -1,0 +1,17 @@
+export function SiteMark({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={className}
+      fill="none"
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect fill="#0c100f" height="32" rx="8" width="32" />
+      <path
+        d="M10 7.25h7.1c3.55 0 5.85 2.12 5.85 5.32 0 3.24-2.3 5.43-5.9 5.43H13.4V24.8H10V7.25Zm3.4 7.55h3.5c1.72 0 2.7-1 2.7-2.23 0-1.22-.98-2.17-2.7-2.17H13.4v4.4Z"
+        fill="#5dd6b3"
+      />
+    </svg>
+  );
+}

@@ -30,6 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
       default: title,
       template: `%s — ${identity.name}`,
     },
+    applicationName: identity.name,
     description: identity.description,
     alternates: { canonical: "/" },
     openGraph: {

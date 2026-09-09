@@ -2,6 +2,7 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
+import { siteConfig } from "@/config/site";
 import { isImageAssetUrl } from "@/lib/media";
 import { getAdminFirestore } from "@/lib/server/firebase-admin";
 
@@ -269,12 +270,12 @@ export const sampleProfile: PublicProfile = {
 };
 
 export function siteIdentity(profile: PublicProfile) {
-  const name = profile.name.trim() || "Portfolio";
+  const name = profile.name.trim() || siteConfig.name;
   const title = profile.professionalTitle.trim();
   const description =
     profile.shortIntroduction.trim() ||
     profile.biography.trim() ||
-    `${name} portfolio`;
+    `${name} — portfolio`;
   return { name, title, description };
 }
 

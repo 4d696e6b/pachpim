@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { siteConfig } from "@/config/site";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
@@ -9,8 +10,8 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
   return {
     name: identity.title
       ? `${identity.name} — ${identity.title}`
-      : `${identity.name} — Portfolio`,
-    short_name: identity.name,
+      : identity.name,
+    short_name: siteConfig.shortName,
     description: identity.description,
     start_url: "/",
     display: "standalone",

@@ -7,8 +7,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type CSSProperties } from "react";
 
+import { SiteMark } from "@/components/shared/site-mark";
 import { Button } from "@/components/ui/button";
-import { mainNavigation } from "@/config/site";
+import { mainNavigation, siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 function ThemeToggle() {
@@ -31,12 +32,16 @@ function ThemeToggle() {
 export function SiteHeader({ name }: { name: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const brandName = name.trim() || "Portfolio";
+  const brandName = name.trim() || siteConfig.name;
 
   return (
     <header className="border-border/60 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-xl">
       <div className="container flex h-18 items-center justify-between">
-        <Link className="text-sm font-semibold tracking-tight" href="/">
+        <Link
+          className="flex items-center gap-2.5 text-sm font-semibold tracking-tight"
+          href="/"
+        >
+          <SiteMark className="size-7 rounded-lg" />
           {brandName}
           <span className="text-accent">.</span>
         </Link>

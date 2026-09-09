@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import {
-  isApprovedAdmin,
+  adminDenialReason,
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_MS,
 } from "@/lib/auth/session";
@@ -21,9 +21,13 @@ function requestHost(request: NextRequest) {
 }
 
 function hasValidOrigin(request: NextRequest) {
+  const fetchSite = request.headers.get("sec-fetch-site");
+  if (fetchSite === "same-origin" || fetchSite === "same-site") return true;
+
   const origin = request.headers.get("origin");
   const host = requestHost(request);
-  if (!origin || !host) return false;
+  if (!origin) return fetchSite === "none";
+  if (!host) return false;
   try {
     const originHost = new URL(origin).host;
     if (originHost === host) return true;
@@ -44,11 +48,9 @@ export async function POST(request: NextRequest) {
   try {
     const { idToken } = sessionSchema.parse(await request.json());
     const decoded = await getAdminAuth().verifyIdToken(idToken, true);
-    if (!isApprovedAdmin(decoded)) {
-      return NextResponse.json(
-        { error: "This account is not approved." },
-        { status: 403 },
-      );
+    const denial = adminDenialReason(decoded);
+    if (denial) {
+      return NextResponse.json({ error: denial }, { status: 403 });
     }
 
     const sessionCookie = await getAdminAuth().createSessionCookie(idToken, {
@@ -63,7 +65,25 @@ export async function POST(request: NextRequest) {
       maxAge: SESSION_MAX_AGE_MS / 1000,
     });
     return response;
-  } catch {
+  } catch (error) {
+    console.error(
+      "session create failed",
+      error instanceof Error ? error.message : error,
+    );
+    const message = error instanceof Error ? error.message : "";
+    if (
+      message.includes("private key") ||
+      message.includes("invalid-credential") ||
+      message.includes("Missing server environment")
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Server Firebase Admin credentials are invalid. Check FIREBASE_PRIVATE_KEY and FIREBASE_CLIENT_EMAIL on Vercel.",
+        },
+        { status: 503 },
+      );
+    }
     return NextResponse.json(
       { error: "Unable to create a secure session." },
       { status: 401 },

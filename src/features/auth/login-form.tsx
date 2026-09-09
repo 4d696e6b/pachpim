@@ -58,7 +58,10 @@ export function LoginForm() {
       const body = (await response.json().catch(() => null)) as {
         error?: string;
       } | null;
-      throw new Error(body?.error ?? "This account is not authorized.");
+      throw new Error(
+        body?.error ??
+          `Could not create an admin session (${response.status}).`,
+      );
     }
     router.replace("/admin");
     router.refresh();

@@ -12,6 +12,7 @@ export const siteConfig = {
   url: siteUrl(),
   name: "Pacharapol Pimpa",
   shortName: "Pachpim",
+  adminEmails: ["pacharapol.p5108@gmail.com"],
 } as const;
 
 export const mainNavigation = [

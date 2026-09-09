@@ -4,25 +4,40 @@ import type { DecodedIdToken } from "firebase-admin/auth";
 import { cookies } from "next/headers";
 import { redirect, unstable_rethrow } from "next/navigation";
 
+import { siteConfig } from "@/config/site";
 import { getAdminAuth } from "@/lib/server/firebase-admin";
 
 export const SESSION_COOKIE_NAME = "__session";
 export const SESSION_MAX_AGE_MS = 5 * 24 * 60 * 60 * 1000;
 
-function allowlistedEmails() {
-  return new Set(
-    (process.env.ADMIN_EMAIL_ALLOWLIST ?? "")
-      .split(",")
-      .map((email) => email.trim().toLowerCase())
-      .filter(Boolean),
-  );
+function normalizeEmail(value: string) {
+  return value.trim().toLowerCase().replace(/^["']+|["']+$/g, "");
+}
+
+export function allowlistedEmails() {
+  const fromEnv = (process.env.ADMIN_EMAIL_ALLOWLIST ?? "")
+    .split(",")
+    .map(normalizeEmail)
+    .filter(Boolean);
+  return new Set([...siteConfig.adminEmails.map(normalizeEmail), ...fromEnv]);
+}
+
+export function adminDenialReason(token: DecodedIdToken) {
+  const email = token.email?.toLowerCase();
+  if (!email) {
+    return "This sign-in has no email address. Use the Google account that matches your admin email.";
+  }
+  if (!allowlistedEmails().has(email)) {
+    return `Signed in as ${email}, which is not on the admin allowlist.`;
+  }
+  if (token.admin !== true) {
+    return "This email is allowlisted, but the Firebase admin claim is missing. Run npm run admin:grant for this email, then sign in again.";
+  }
+  return null;
 }
 
 export function isApprovedAdmin(token: DecodedIdToken) {
-  const email = token.email?.toLowerCase();
-  return (
-    token.admin === true && Boolean(email && allowlistedEmails().has(email))
-  );
+  return adminDenialReason(token) === null;
 }
 
 export async function getOptionalSession(): Promise<DecodedIdToken | null> {

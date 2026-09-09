@@ -73,7 +73,7 @@ Open `http://localhost:3000`.
    - `FIREBASE_CLIENT_EMAIL`
    - `FIREBASE_PRIVATE_KEY`
 7. `FIREBASE_PRIVATE_KEY` is the JSON `private_key` field (including `-----BEGIN PRIVATE KEY-----`). In `.env.local`, keep it in quotes with `\n`. In the Vercel dashboard, paste **one line** with `\n` and **no wrapping quotes** — extra quotes make OpenSSL fail with `ERR_OSSL_UNSUPPORTED`.
-8. Set `ADMIN_EMAIL_ALLOWLIST` to one or more comma-separated administrator emails.
+8. Set `ADMIN_EMAIL_ALLOWLIST` to one or more comma-separated administrator emails. The site also always allows `pacharapol.p5108@gmail.com`. That account still needs the Firebase `admin` custom claim.
 9. Generate `RATE_LIMIT_SECRET` with at least 32 random bytes, for example `openssl rand -base64 48`.
 
 The Firebase web API key is not a secret. Service account values, rate-limit secrets, and session credentials are server-only and must never use the `NEXT_PUBLIC_` prefix.

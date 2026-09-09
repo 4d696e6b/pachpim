@@ -20,6 +20,12 @@ export function isAcceptedMediaType(value: string): value is AcceptedMediaType {
   return (ACCEPTED_MEDIA_TYPES as readonly string[]).includes(value);
 }
 
+export function mediaIdFromUrl(value: string) {
+  const path = cmsMediaPath(value) ?? value.trim();
+  const match = path.match(/^\/api\/media\/([^/]+)\/file\/?$/);
+  return match?.[1];
+}
+
 export function cmsMediaPath(value: string) {
   const trimmed = value.trim();
   try {

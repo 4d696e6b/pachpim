@@ -1,4 +1,4 @@
-import { getGoogleAccessToken } from "@/lib/server/firebase-admin";
+import { getDatastoreAccessToken } from "@/lib/server/google-access-token";
 
 type FirestoreValue = {
   stringValue?: string;
@@ -9,7 +9,7 @@ export async function fetchFirestoreDocument(documentPath: string) {
   const projectId = process.env.FIREBASE_PROJECT_ID;
   if (!projectId) throw new Error("Missing FIREBASE_PROJECT_ID");
 
-  const token = await getGoogleAccessToken();
+  const token = await getDatastoreAccessToken();
   const response = await fetch(
     `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${documentPath}`,
     {

@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { unstable_rethrow } from "next/navigation";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getAdminFirestore } from "@/lib/server/firebase-admin";
@@ -67,7 +69,23 @@ function formatBytes(bytes: number) {
 }
 
 export default async function AdminDashboardPage() {
-  const stats = await getDashboardStats();
+  let stats;
+  try {
+    stats = await getDashboardStats();
+  } catch (error) {
+    unstable_rethrow(error);
+    return (
+      <div className="mx-auto max-w-2xl">
+        <h1 className="text-3xl font-semibold tracking-tight">
+          Admin is signed in, but Firestore is unavailable
+        </h1>
+        <p className="text-muted-foreground mt-3 leading-7">
+          Check FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and
+          FIREBASE_PRIVATE_KEY on Vercel, then redeploy.
+        </p>
+      </div>
+    );
+  }
   const cards = [
     {
       label: "Projects",

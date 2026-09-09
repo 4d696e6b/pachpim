@@ -2,7 +2,7 @@ import "server-only";
 
 import type { DecodedIdToken } from "firebase-admin/auth";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, unstable_rethrow } from "next/navigation";
 
 import { getAdminAuth } from "@/lib/server/firebase-admin";
 
@@ -26,12 +26,13 @@ export function isApprovedAdmin(token: DecodedIdToken) {
 }
 
 export async function getOptionalSession(): Promise<DecodedIdToken | null> {
-  const sessionCookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
-  if (!sessionCookie) return null;
   try {
+    const sessionCookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+    if (!sessionCookie) return null;
     const token = await getAdminAuth().verifySessionCookie(sessionCookie, true);
     return isApprovedAdmin(token) ? token : null;
-  } catch {
+  } catch (error) {
+    unstable_rethrow(error);
     return null;
   }
 }

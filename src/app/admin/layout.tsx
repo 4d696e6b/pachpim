@@ -4,6 +4,7 @@ import { SignOutButton } from "@/features/auth/sign-out-button";
 import { requireAdmin } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export default async function AdminLayout({
   children,

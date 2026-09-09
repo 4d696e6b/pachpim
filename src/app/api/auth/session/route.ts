@@ -12,11 +12,25 @@ export const runtime = "nodejs";
 
 const sessionSchema = z.object({ idToken: z.string().min(100).max(10000) });
 
+function requestHost(request: NextRequest) {
+  const forwarded = request.headers.get("x-forwarded-host");
+  const host = (forwarded ?? request.headers.get("host") ?? "")
+    .split(",")[0]
+    .trim();
+  return host;
+}
+
 function hasValidOrigin(request: NextRequest) {
   const origin = request.headers.get("origin");
-  if (!origin) return false;
+  const host = requestHost(request);
+  if (!origin || !host) return false;
   try {
-    return new URL(origin).host === request.headers.get("host");
+    const originHost = new URL(origin).host;
+    if (originHost === host) return true;
+    const siteHost = new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+    ).host;
+    return originHost === siteHost;
   } catch {
     return false;
   }

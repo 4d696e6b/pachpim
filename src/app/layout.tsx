@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { unstable_rethrow } from "next/navigation";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
-import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
+import {
+  emptyProfile,
+  getPublicContent,
+  siteIdentity,
+} from "@/lib/server/public-content";
 
 import "./globals.css";
 
@@ -18,8 +23,15 @@ const geistMono = Geist_Mono({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { profile } = await getPublicContent();
-  const identity = siteIdentity(profile);
+  let identity = siteIdentity(emptyProfile);
+
+  try {
+    const { profile } = await getPublicContent();
+    identity = siteIdentity(profile);
+  } catch (error) {
+    unstable_rethrow(error);
+  }
+
   const title = identity.title
     ? `${identity.name} — ${identity.title}`
     : identity.name;

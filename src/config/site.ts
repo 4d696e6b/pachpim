@@ -1,5 +1,15 @@
+function siteUrl() {
+  const value = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!value) return "http://localhost:3000";
+  try {
+    return new URL(value).toString().replace(/\/$/, "");
+  } catch {
+    return "http://localhost:3000";
+  }
+}
+
 export const siteConfig = {
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: siteUrl(),
   name: "Pacharapol Pimpa",
   shortName: "Pachpim",
 } as const;

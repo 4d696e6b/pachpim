@@ -1,6 +1,7 @@
 import "server-only";
 
 import { unstable_cache } from "next/cache";
+import { unstable_rethrow } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { isImageAssetUrl } from "@/lib/media";
@@ -446,6 +447,7 @@ async function loadPublicContent() {
       certifications,
     };
   } catch (error) {
+    unstable_rethrow(error);
     if (
       process.env.NODE_ENV === "production" &&
       process.env.FIREBASE_PROJECT_ID &&

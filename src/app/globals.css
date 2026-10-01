@@ -549,3 +549,72 @@ summary {
     transition-duration: 0.01ms !important;
   }
 }
+
+.collection-heading::after {
+  content: "";
+  position: absolute;
+  width: 25rem;
+  height: 25rem;
+  right: -12rem;
+  top: -10rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  box-shadow:
+    0 0 0 45px color-mix(in srgb, var(--accent) 3%, transparent),
+    0 0 0 90px color-mix(in srgb, var(--accent) 2%, transparent);
+  pointer-events: none;
+}
+.preview-cover {
+  background:
+    radial-gradient(
+      ellipse at 80% 20%,
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      transparent 70%
+    ),
+    var(--muted);
+}
+.journal-card {
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.journal-card:hover {
+  transform: translateY(-6px);
+}
+.prose-custom blockquote {
+  border-left: 2px solid var(--accent);
+  margin-block: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--muted);
+  border-radius: 0 1rem 1rem 0;
+}
+.prose-custom ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.prose-custom ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.prose-custom li + li {
+  margin-top: 0.5rem;
+}
+.prose-custom table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 1.5rem;
+}
+.prose-custom :is(th, td) {
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.prose-custom th {
+  background: var(--muted);
+  color: var(--foreground);
+}
+@media (prefers-reduced-motion: reduce) {
+  .journal-card:hover {
+    transform: none;
+  }
+}

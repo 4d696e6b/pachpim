@@ -1,9 +1,10 @@
 "use client";
 
-import { BookOpen, Search } from "lucide-react";
+import { ArrowUpRight, BookOpen, Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { Stagger, StaggerItem } from "@/components/shared/motion";
 import { CmsImage } from "@/components/shared/cms-image";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Badge, Input } from "@/components/ui/form-controls";
@@ -50,54 +51,78 @@ export function NoteBrowser({ notes }: { notes: PublicNote[] }) {
           ))}
         </select>
       </div>
+      <p className="text-muted-foreground mt-6 text-xs" aria-live="polite">
+        {visible.length} {visible.length === 1 ? "note" : "notes"}
+        {query || category !== "all" ? " found" : " in the notebook"}
+      </p>
       {visible.length ? (
-        <div className="divide-border mt-8 divide-y border-y">
-          {visible.map((note) => (
-            <article className="group py-8" key={note.id}>
-              <Link
-                className="grid gap-4 md:grid-cols-[1fr_auto] md:items-start"
-                href={`/notes/${note.slug}`}
-              >
-                <div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge>{note.category}</Badge>
-                    {note.tags.slice(0, 2).map((tag) => (
-                      <Badge key={tag}>#{tag}</Badge>
-                    ))}
-                  </div>
-                  <h2 className="group-hover:text-accent mt-4 text-2xl font-semibold tracking-tight transition">
-                    {note.title}
-                  </h2>
-                  <p className="text-muted-foreground mt-3 max-w-2xl leading-7">
-                    {note.excerpt}
-                  </p>
-                </div>
-                <div className="flex flex-col items-start gap-3 md:items-end">
-                  {note.coverImageUrl ? (
-                    <div className="relative h-24 w-36 overflow-hidden rounded-2xl border">
+        <Stagger className="mt-5 grid gap-6 md:grid-cols-2">
+          {visible.map((note, index) => (
+            <StaggerItem key={note.id}>
+              <article className="journal-card group h-full">
+                <Link
+                  className="bg-card hover:border-accent/40 focus-visible:outline-accent flex h-full flex-col overflow-hidden rounded-2xl border transition duration-300"
+                  href={`/notes/${note.slug}`}
+                >
+                  <div className="preview-cover relative aspect-[16/9] overflow-hidden border-b">
+                    {note.coverImageUrl ? (
                       <CmsImage
-                        alt=""
-                        className="object-cover"
+                        alt={`${note.title} cover`}
+                        className="object-cover transition duration-700 group-hover:scale-105"
                         fill
-                        sizes="144px"
+                        sizes="(min-width: 768px) 50vw, 100vw"
                         src={note.coverImageUrl}
                       />
+                    ) : (
+                      <div className="absolute inset-0 flex items-end justify-between p-7">
+                        <span className="text-accent/25 font-mono text-7xl tracking-tighter">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <BookOpen
+                          className="text-accent/50 size-10"
+                          strokeWidth={1}
+                        />
+                      </div>
+                    )}
+                    <span className="bg-background/90 absolute top-4 left-4 rounded-full border px-3 py-1 text-xs backdrop-blur">
+                      {note.category}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6 sm:p-7">
+                    <p className="text-muted-foreground font-mono text-xs">
+                      {formatDate(note.publishedAt)} · {note.readingTime} min
+                      read
+                    </p>
+                    <h2 className="group-hover:text-accent mt-4 text-2xl font-semibold tracking-tight transition">
+                      {note.title}
+                    </h2>
+                    <p className="text-muted-foreground mt-3 line-clamp-3 leading-7">
+                      {note.excerpt}
+                    </p>
+                    <div className="mt-auto flex items-center justify-between gap-4 pt-7">
+                      <div className="flex flex-wrap gap-2">
+                        {note.tags.slice(0, 2).map((tag) => (
+                          <Badge key={tag}>#{tag}</Badge>
+                        ))}
+                      </div>
+                      <ArrowUpRight className="text-accent size-5 shrink-0 transition duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                     </div>
-                  ) : null}
-                  <p className="text-muted-foreground text-sm">
-                    {formatDate(note.publishedAt)} · {note.readingTime} min read
-                  </p>
-                </div>
-              </Link>
-            </article>
+                  </div>
+                </Link>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       ) : (
         <div className="mt-8">
           <EmptyState
-            description="Try a broader search term or choose another category."
+            description={
+              notes.length
+                ? "Try a broader search term or choose another category."
+                : "This notebook is just getting started. New ideas will appear here as they are published."
+            }
             icon={BookOpen}
-            title="No notes found"
+            title={notes.length ? "No notes found" : "More ideas on the way"}
           />
         </div>
       )}

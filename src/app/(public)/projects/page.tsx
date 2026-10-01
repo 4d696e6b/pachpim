@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CollectionHeading } from "@/components/shared/collection-heading";
 
 import { ProjectBrowser } from "@/features/projects/project-browser";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
@@ -16,12 +17,13 @@ export default async function ProjectsPage() {
   const { projects } = await getPublicContent();
   return (
     <section className="section container">
-      <p className="eyebrow">Projects</p>
-      <h1 className="page-title mt-6 max-w-4xl">Selected work</h1>
-      <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
-        Case studies covering the problem, technical decisions, delivery
-        process, and result behind each project.
-      </p>
+      <CollectionHeading
+        eyebrow="Projects"
+        title="Ideas turned into working products."
+        description="A closer look at the problems, decisions, and details behind the things I build."
+        count={projects.length}
+        unit="projects"
+      />
       <div className="mt-12">
         <ProjectBrowser projects={projects} />
       </div>

@@ -2,7 +2,7 @@ import { ProjectForm } from "@/features/projects/project-form";
 
 export default function NewProjectPage() {
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-[1600px]">
       <p className="eyebrow">Projects</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight">
         New project

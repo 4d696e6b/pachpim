@@ -93,16 +93,13 @@ export function ProjectBrowser({ projects }: { projects: PublicProject[] }) {
         </p>
       ) : null}
       {visible.length ? (
-        <Stagger
-          className={
-            showFilters
-              ? "mt-5 grid gap-6 md:grid-cols-2"
-              : "grid gap-6 md:grid-cols-2"
-          }
-        >
-          {visible.map((project) => (
-            <StaggerItem key={project.id}>
-              <ProjectCard project={project} />
+        <Stagger className="mt-5 grid gap-7 md:grid-cols-2">
+          {visible.map((project, index) => (
+            <StaggerItem
+              key={project.id}
+              className={index === 0 ? "md:col-span-2" : undefined}
+            >
+              <ProjectCard project={project} featured={index === 0} />
             </StaggerItem>
           ))}
         </Stagger>

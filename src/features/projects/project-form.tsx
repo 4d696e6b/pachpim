@@ -12,6 +12,9 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 
+import { EditorWorkspace } from "@/components/admin/editor-workspace";
+import { ProjectPreview } from "@/components/admin/content-preview";
+import { mediaFileUrl } from "@/lib/media";
 import { CmsImage } from "@/components/shared/cms-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -116,15 +119,25 @@ export function ProjectForm({
   useUnsavedChanges(isDirty && !saving);
   const title = useWatch({ control, name: "title" });
   const cover = useWatch({ control, name: "coverImageUrl" });
+  const values = useWatch({ control });
 
   async function submit(values: ProjectFormValues) {
     setSaving(true);
-    const result = await saveProject(id, values);
+    let result;
+    try {
+      result = await saveProject(id, values);
+    } catch {
+      toast.error("Could not save. Please try again.");
+      setSaving(false);
+      return;
+    }
     if (!result.ok) {
       toast.error(result.error);
       setSaving(false);
       return;
     }
+    methods.reset(values);
+    setSaving(false);
     toast.success(id ? "Project updated." : "Project created.");
     router.replace(`/admin/projects/${result.id}`);
     router.refresh();
@@ -132,110 +145,155 @@ export function ProjectForm({
 
   return (
     <FormProvider {...methods}>
-      <form className="grid gap-8" onSubmit={handleSubmit(submit)}>
-        <section className="bg-card grid gap-5 rounded-3xl border p-6">
-          <h2 className="text-lg font-semibold">Basics</h2>
-          <ProjectField label="Title" name="title" />
-          <div className="grid gap-2">
-            <Label htmlFor="slug">Slug</Label>
-            <div className="flex gap-2">
-              <Input id="slug" {...register("slug")} />
-              <Button
-                aria-label="Generate slug from title"
-                onClick={() =>
-                  setValue("slug", slugify(title), {
-                    shouldDirty: true,
-                    shouldValidate: true,
-                  })
-                }
-                size="icon"
-                type="button"
-                variant="outline"
-              >
-                <WandSparkles className="size-4" />
-              </Button>
-            </div>
-            <FieldError>{errors.slug?.message}</FieldError>
-          </div>
-          <ProjectField label="Short excerpt" name="excerpt" multiline />
-          <ProjectField label="Full description" name="description" multiline />
-          <div className="grid gap-5 sm:grid-cols-2">
-            <ProjectField label="Category" name="category" />
-            <ProjectField label="Year" name="year" type="number" />
-            <ProjectField label="Status label" name="statusLabel" />
-            <ProjectField label="Sort order" name="sortOrder" type="number" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="status">Publishing status</Label>
-            <select
-              className="bg-background h-11 rounded-xl border px-3 text-sm"
-              id="status"
-              {...register("status")}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
-          <label className="flex items-center gap-3 text-sm font-medium">
-            <input
-              className="size-4 accent-[var(--accent)]"
-              type="checkbox"
-              {...register("featured")}
-            />
-            Feature this project
-          </label>
-        </section>
-
-        <section className="bg-card grid gap-5 rounded-3xl border p-6">
-          <h2 className="text-lg font-semibold">Case study</h2>
-          <ProjectField label="Challenge" name="challenge" multiline />
-          <ProjectField label="Approach" name="approach" multiline />
-          <ProjectField label="Process" name="process" multiline />
-          <ProjectField label="Outcome" name="outcome" multiline />
-          <ProjectField
-            hint="One metric per line, formatted as Label: Value"
-            label="Key metrics"
-            name="metrics"
-            multiline
-          />
-        </section>
-
-        <section className="bg-card grid gap-5 rounded-3xl border p-6">
-          <h2 className="text-lg font-semibold">Technology and media</h2>
-          <MediaUploader />
-          <p className="text-muted-foreground text-xs">
-            Files are stored in Firestore (700 KB max). Publish them in Media,
-            then paste the copied URL into the cover or gallery fields.
-          </p>
-          <ProjectField
-            hint="Comma-separated"
-            label="Technologies"
-            name="technologies"
-          />
-          <ProjectField label="Cover image URL" name="coverImageUrl" />
-          {cover ? (
-            <div className="relative aspect-video overflow-hidden rounded-2xl border">
-              <CmsImage
-                alt="Cover preview"
-                className="object-cover"
-                fill
-                sizes="700px"
-                src={cover}
+      <form
+        className="grid gap-8"
+        onSubmit={handleSubmit(submit, () =>
+          toast.error("Check the highlighted fields in Edit view."),
+        )}
+      >
+        <fieldset disabled={saving} className="min-w-0">
+          <EditorWorkspace
+            kind="Project"
+            dirty={isDirty}
+            preview={<ProjectPreview values={values} />}
+          >
+            <section className="bg-card grid gap-5 rounded-3xl border p-6">
+              <h2 className="text-lg font-semibold">Basics</h2>
+              <ProjectField label="Title" name="title" />
+              <div className="grid gap-2">
+                <Label htmlFor="slug">Slug</Label>
+                <div className="flex gap-2">
+                  <Input id="slug" {...register("slug")} />
+                  <Button
+                    aria-label="Generate slug from title"
+                    onClick={() =>
+                      setValue("slug", slugify(title), {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      })
+                    }
+                    size="icon"
+                    type="button"
+                    variant="outline"
+                  >
+                    <WandSparkles className="size-4" />
+                  </Button>
+                </div>
+                <FieldError>{errors.slug?.message}</FieldError>
+              </div>
+              <ProjectField label="Short excerpt" name="excerpt" multiline />
+              <ProjectField
+                label="Full description"
+                name="description"
+                multiline
               />
-            </div>
-          ) : null}
-          <ProjectField
-            hint="One public image URL per line"
-            label="Gallery URLs"
-            name="gallery"
-            multiline
-          />
-          <div className="grid gap-5 sm:grid-cols-2">
-            <ProjectField label="Live website URL" name="liveUrl" />
-            <ProjectField label="Source repository URL" name="repositoryUrl" />
-          </div>
-        </section>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <ProjectField label="Category" name="category" />
+                <ProjectField label="Year" name="year" type="number" />
+                <ProjectField label="Status label" name="statusLabel" />
+                <ProjectField
+                  label="Sort order"
+                  name="sortOrder"
+                  type="number"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="status">Publishing status</Label>
+                <select
+                  className="bg-background h-11 rounded-xl border px-3 text-sm"
+                  id="status"
+                  {...register("status")}
+                >
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select>
+              </div>
+              <label className="flex items-center gap-3 text-sm font-medium">
+                <input
+                  className="size-4 accent-[var(--accent)]"
+                  type="checkbox"
+                  {...register("featured")}
+                />
+                Feature this project
+              </label>
+            </section>
 
+            <section className="bg-card grid gap-5 rounded-3xl border p-6">
+              <h2 className="text-lg font-semibold">Case study</h2>
+              <ProjectField label="Challenge" name="challenge" multiline />
+              <ProjectField label="Approach" name="approach" multiline />
+              <ProjectField label="Process" name="process" multiline />
+              <ProjectField label="Outcome" name="outcome" multiline />
+              <ProjectField
+                hint="One metric per line, formatted as Label: Value"
+                label="Key metrics"
+                name="metrics"
+                multiline
+              />
+            </section>
+
+            <section className="bg-card grid gap-5 rounded-3xl border p-6">
+              <h2 className="text-lg font-semibold">Technology and media</h2>
+              <MediaUploader
+                onUploaded={async (mediaId) => {
+                  if (!mediaId) return;
+                  try {
+                    const response = await fetch(`/api/media/${mediaId}`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ visibility: "public" }),
+                    });
+                    if (!response.ok) throw new Error("Upload visibility");
+                    setValue("coverImageUrl", mediaFileUrl(mediaId), {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
+                    toast.success("Cover image added.");
+                  } catch {
+                    toast.error(
+                      "Image uploaded but could not be made public. Check Media before using it.",
+                    );
+                  }
+                }}
+              />
+              <p className="text-muted-foreground text-xs">
+                Upload a cover image (up to 700 KB). It will be available
+                publicly and added to your preview. You can also paste image
+                links below.
+              </p>
+              <ProjectField
+                hint="Comma-separated"
+                label="Technologies"
+                name="technologies"
+              />
+              <ProjectField label="Cover image URL" name="coverImageUrl" />
+              {cover ? (
+                <div className="relative aspect-video overflow-hidden rounded-2xl border">
+                  <CmsImage
+                    alt="Cover preview"
+                    className="object-cover"
+                    fill
+                    sizes="700px"
+                    src={cover}
+                  />
+                </div>
+              ) : null}
+              <ProjectField
+                hint="One public image URL per line"
+                label="Gallery URLs"
+                name="gallery"
+                multiline
+              />
+              <div className="grid gap-5 sm:grid-cols-2">
+                <ProjectField label="Live website URL" name="liveUrl" />
+                <ProjectField
+                  label="Source repository URL"
+                  name="repositoryUrl"
+                />
+              </div>
+            </section>
+          </EditorWorkspace>
+        </fieldset>
         <div className="bg-background/90 sticky bottom-4 flex justify-end rounded-2xl border p-3 shadow-xl backdrop-blur">
           <Button disabled={saving} type="submit" variant="accent">
             <Save className="size-4" />

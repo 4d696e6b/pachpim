@@ -49,7 +49,7 @@ export default async function EditProjectPage({
   };
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-[1600px]">
       <p className="eyebrow">Projects</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight">
         Edit project

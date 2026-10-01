@@ -20,8 +20,8 @@ export function AmbientMotion() {
   const reduceMotion = useReducedMotion();
   const pointerX = useMotionValue(-500);
   const pointerY = useMotionValue(-500);
-  const smoothX = useSpring(pointerX, { stiffness: 90, damping: 25 });
-  const smoothY = useSpring(pointerY, { stiffness: 90, damping: 25 });
+  const smoothX = useSpring(pointerX, { stiffness: 170, damping: 24 });
+  const smoothY = useSpring(pointerY, { stiffness: 170, damping: 24 });
   const background = useMotionTemplate`radial-gradient(520px circle at ${smoothX}px ${smoothY}px, color-mix(in srgb, var(--accent) 9%, transparent), transparent 72%)`;
 
   useEffect(() => {

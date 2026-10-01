@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { CmsImage } from "@/components/shared/cms-image";
+import { ImageLightbox } from "@/components/shared/image-lightbox";
 import { isImageAssetUrl } from "@/lib/media";
 import { isSafeUrl } from "@/lib/security";
 import { slugify } from "@/lib/utils";
@@ -83,25 +84,29 @@ export function MarkdownContent({ body }: { body: string }) {
             if (!url) return null;
             if (url.startsWith("/api/media/")) {
               return (
-                <span className="note-photo relative my-8 block aspect-video overflow-hidden rounded-2xl border">
-                  <CmsImage
-                    alt={alt || "Note photo"}
-                    className="object-cover"
-                    fill
-                    sizes="(min-width: 768px) 720px, 100vw"
-                    src={url}
-                  />
-                </span>
+                <ImageLightbox alt={alt || "Note photo"} src={url}>
+                  <span className="note-photo relative my-8 block aspect-video overflow-hidden rounded-2xl border">
+                    <CmsImage
+                      alt={alt || "Note photo"}
+                      className="object-cover"
+                      fill
+                      sizes="(min-width: 768px) 720px, 100vw"
+                      src={url}
+                    />
+                  </span>
+                </ImageLightbox>
               );
             }
             return (
-              // Remote HTTPS photos skip the optimizer.
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt={alt || "Note photo"}
-                className="my-8 h-auto w-full rounded-2xl border"
-                src={url}
-              />
+              <ImageLightbox alt={alt || "Note photo"} src={url}>
+                {/* Remote HTTPS photos skip the optimizer. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  alt={alt || "Note photo"}
+                  className="my-8 h-auto w-full rounded-2xl border"
+                  src={url}
+                />
+              </ImageLightbox>
             );
           },
         }}

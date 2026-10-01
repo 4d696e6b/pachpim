@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CmsImage } from "@/components/shared/cms-image";
+import { ImageLightbox } from "@/components/shared/image-lightbox";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
@@ -98,16 +99,22 @@ export default async function NoteDetailPage({ params }: Props) {
         </Reveal>
         {note.coverImageUrl ? (
           <Reveal delay={0.08}>
-            <div className="gallery-image relative mx-auto mt-10 aspect-[16/8] max-w-5xl overflow-hidden rounded-[2rem] border">
-              <CmsImage
-                alt={`${note.title} cover`}
-                className="object-cover transition-transform duration-700"
-                fill
-                priority
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                src={note.coverImageUrl}
-              />
-            </div>
+            <ImageLightbox
+              alt={`${note.title} cover`}
+              className="mx-auto mt-10 max-w-5xl"
+              src={note.coverImageUrl}
+            >
+              <div className="gallery-image relative aspect-[16/8] overflow-hidden rounded-[2rem] border">
+                <CmsImage
+                  alt={`${note.title} cover`}
+                  className="object-cover transition-transform duration-700"
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 1024px, 100vw"
+                  src={note.coverImageUrl}
+                />
+              </div>
+            </ImageLightbox>
           </Reveal>
         ) : null}
         <div className="mx-auto mt-14 grid max-w-5xl gap-12 lg:grid-cols-[220px_1fr]">

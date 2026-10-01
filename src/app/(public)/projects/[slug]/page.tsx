@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CmsImage } from "@/components/shared/cms-image";
+import { ImageLightbox } from "@/components/shared/image-lightbox";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Reveal } from "@/components/shared/reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -115,18 +116,25 @@ export default async function ProjectDetailPage({ params }: Props) {
         </header>
 
         <Reveal className="container" delay={0.08}>
-          <div className="bg-muted relative aspect-[16/9] overflow-hidden rounded-2xl border">
-            {project.coverImageUrl ? (
-              <CmsImage
-                alt={`${project.title} cover`}
-                className="object-cover"
-                fill
-                priority
-                sizes="(min-width: 1200px) 1180px, 100vw"
-                src={project.coverImageUrl}
-              />
-            ) : null}
-          </div>
+          {project.coverImageUrl ? (
+            <ImageLightbox
+              alt={`${project.title} cover`}
+              src={project.coverImageUrl}
+            >
+              <div className="gallery-image bg-muted relative aspect-[16/9] overflow-hidden rounded-2xl border">
+                <CmsImage
+                  alt={`${project.title} cover`}
+                  className="object-cover"
+                  fill
+                  priority
+                  sizes="(min-width: 1200px) 1180px, 100vw"
+                  src={project.coverImageUrl}
+                />
+              </div>
+            </ImageLightbox>
+          ) : (
+            <div className="bg-muted relative aspect-[16/9] overflow-hidden rounded-2xl border" />
+          )}
         </Reveal>
 
         <div className="section container grid gap-14 lg:grid-cols-[.65fr_1.35fr] lg:gap-20">
@@ -193,15 +201,20 @@ export default async function ProjectDetailPage({ params }: Props) {
           <section className="container grid gap-6 pb-24 md:grid-cols-2">
             {project.gallery.map((image, index) => (
               <Reveal delay={index * 0.08} key={image}>
-                <div className="gallery-image relative aspect-[4/3] overflow-hidden rounded-2xl border">
-                  <CmsImage
-                    alt={`${project.title} gallery image ${index + 1}`}
-                    className="object-cover transition-transform duration-700"
-                    fill
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    src={image}
-                  />
-                </div>
+                <ImageLightbox
+                  alt={`${project.title} gallery image ${index + 1}`}
+                  src={image}
+                >
+                  <div className="gallery-image relative aspect-[4/3] overflow-hidden rounded-2xl border">
+                    <CmsImage
+                      alt={`${project.title} gallery image ${index + 1}`}
+                      className="object-cover transition-transform duration-700"
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      src={image}
+                    />
+                  </div>
+                </ImageLightbox>
               </Reveal>
             ))}
           </section>

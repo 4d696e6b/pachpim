@@ -295,6 +295,24 @@ select {
   -webkit-tap-highlight-color: transparent;
 }
 
+a,
+button,
+[role="button"],
+select,
+summary {
+  cursor: pointer;
+}
+
+:is(button, [role="button"]):disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+.image-lightbox-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
 .container {
   width: min(100% - 2rem, 1180px);
   margin-inline: auto;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowDownToLine } from "lucide-react";
 import { CmsImage } from "@/components/shared/cms-image";
+import { ImageLightbox } from "@/components/shared/image-lightbox";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Reveal } from "@/components/shared/reveal";
 import { SocialLinks } from "@/components/shared/social-links";
@@ -204,9 +205,19 @@ export default async function AboutPage() {
                     </CardContent>
                   </Card>
                 );
-                return credentialUrl ? (
+                return imageUrl &&
+                  (!credentialUrl || isImageAssetUrl(credentialUrl)) ? (
+                  <ImageLightbox
+                    alt={`${item.title} certificate`}
+                    className="h-full"
+                    key={item.id}
+                    src={imageUrl}
+                  >
+                    {card}
+                  </ImageLightbox>
+                ) : credentialUrl ? (
                   <a
-                    className="block transition hover:-translate-y-0.5"
+                    className="block cursor-pointer transition hover:-translate-y-0.5"
                     href={credentialUrl}
                     key={item.id}
                     rel="noreferrer noopener"

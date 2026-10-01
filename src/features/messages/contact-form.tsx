@@ -47,21 +47,25 @@ export function ContactForm() {
   });
 
   async function onSubmit(values: ContactValues) {
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const body = (await response.json().catch(() => null)) as {
-      message?: string;
-    } | null;
-    if (!response.ok) {
-      toast.error(body?.message ?? "Your message could not be sent.");
-      return;
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const body = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
+      if (!response.ok) {
+        toast.error(body?.message ?? "Your message could not be sent.");
+        return;
+      }
+      reset();
+      setSubmitted(true);
+      toast.success("Message sent. Thank you.");
+    } catch {
+      toast.error("Could not connect. Please check your connection and retry.");
     }
-    reset();
-    setSubmitted(true);
-    toast.success("Message sent. Thank you.");
   }
 
   if (submitted) {
@@ -72,7 +76,8 @@ export function ContactForm() {
       >
         <h2 className="text-xl font-semibold">Your message is on its way.</h2>
         <p className="text-muted-foreground mt-3 leading-7">
-          Thanks for reaching out. I’ll respond as soon as I can.
+          Thanks for reaching out. I have received your note and will reply as
+          soon as I can.
         </p>
         <Button
           className="mt-6"
@@ -86,7 +91,13 @@ export function ContactForm() {
   }
 
   return (
-    <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)}>
+    <form className="grid gap-5" noValidate onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">Send a message</h2>
+        <p className="text-muted-foreground mt-2 text-sm leading-6">
+          A little context about your goal and timeline helps me respond well.
+        </p>
+      </div>
       <div className="hidden" aria-hidden>
         <Label htmlFor="company">Company</Label>
         <Input
@@ -99,7 +110,12 @@ export function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" autoComplete="name" {...register("name")} />
+          <Input
+            id="name"
+            autoComplete="name"
+            placeholder="Your name"
+            {...register("name")}
+          />
           <FieldError>{errors.name?.message}</FieldError>
         </div>
         <div className="grid gap-2">
@@ -107,6 +123,7 @@ export function ContactForm() {
           <Input
             id="email"
             autoComplete="email"
+            placeholder="you@example.com"
             type="email"
             {...register("email")}
           />
@@ -115,12 +132,21 @@ export function ContactForm() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="subject">Subject</Label>
-        <Input id="subject" {...register("subject")} />
+        <Input
+          id="subject"
+          placeholder="What would you like to discuss?"
+          {...register("subject")}
+        />
         <FieldError>{errors.subject?.message}</FieldError>
       </div>
       <div className="grid gap-2">
         <Label htmlFor="message">Message</Label>
-        <Textarea id="message" rows={7} {...register("message")} />
+        <Textarea
+          id="message"
+          placeholder="Share the goal, scope, and timeline…"
+          rows={7}
+          {...register("message")}
+        />
         <FieldError>{errors.message?.message}</FieldError>
       </div>
       <Button disabled={isSubmitting} type="submit" variant="accent">

@@ -1,4 +1,4 @@
-import { ArrowRight, Award, Mail, MapPin, Sparkles } from "lucide-react";
+import { ArrowDownToLine, ArrowRight, Award, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 
 import { CmsImage } from "@/components/shared/cms-image";
@@ -11,6 +11,7 @@ import { SkillHolders } from "@/components/shared/skill-holders";
 import { siteConfig } from "@/config/site";
 import { ProjectCard } from "@/features/projects/project-card";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
+import { isSafeUrl } from "@/lib/security";
 import { formatDate } from "@/lib/utils";
 
 export default async function HomePage() {
@@ -25,6 +26,10 @@ export default async function HomePage() {
   const hasMoreExperience =
     experiences.length > 4 ||
     timeline.some((item) => item.type === "education");
+  const resumeUrl =
+    profile.resumeUrl && isSafeUrl(profile.resumeUrl, { allowRelative: true })
+      ? profile.resumeUrl
+      : null;
 
   return (
     <>
@@ -46,14 +51,21 @@ export default async function HomePage() {
           },
         ]}
       />
-      <section className="container grid min-h-[calc(100vh-4.5rem)] items-center gap-12 py-20 lg:grid-cols-[1.2fr_.8fr]">
+      <section className="container grid min-h-[calc(100vh-4.5rem)] items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.15fr_.85fr]">
         <Reveal>
           <p className="eyebrow flex items-center gap-2">
-            <Sparkles className="size-3.5" /> {profile.availability}
+            <span className="bg-accent size-2 rounded-full" />
+            {profile.availability}
           </p>
-          <h1 className="display mt-6 max-w-4xl">
-            {profile.professionalTitle}
+          <h1 className="display mt-6 max-w-3xl text-balance">
+            I build practical web products and real-time systems.
           </h1>
+          <p className="mt-6 font-medium">
+            {identity.name}
+            {profile.professionalTitle
+              ? ` · ${profile.professionalTitle}`
+              : null}
+          </p>
           <p className="text-muted-foreground mt-7 max-w-2xl text-lg leading-8 sm:text-xl">
             {profile.shortIntroduction}
           </p>
@@ -68,14 +80,20 @@ export default async function HomePage() {
                 <Mail className="size-4" /> Contact me
               </Link>
             </Button>
+            {resumeUrl ? (
+              <Button asChild size="lg" variant="ghost">
+                <a href={resumeUrl} rel="noreferrer noopener" target="_blank">
+                  <ArrowDownToLine className="size-4" /> Résumé
+                </a>
+              </Button>
+            ) : null}
           </div>
           <p className="text-muted-foreground mt-8 flex items-center gap-2 text-sm">
             <MapPin className="size-4" /> {profile.location}
           </p>
         </Reveal>
         <Reveal className="relative mx-auto w-full max-w-md" delay={0.12}>
-          <div className="bg-accent/10 absolute -inset-8 -z-10 rounded-full blur-3xl" />
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border bg-[linear-gradient(145deg,var(--muted),color-mix(in_srgb,var(--accent)_16%,var(--background)))] shadow-2xl">
+          <div className="bg-muted relative aspect-[4/5] overflow-hidden rounded-2xl border">
             {profile.profilePhotoUrl ? (
               <CmsImage
                 alt={`${profile.name} portrait`}
@@ -96,14 +114,6 @@ export default async function HomePage() {
                 </span>
               </div>
             )}
-            <div className="bg-background/75 absolute right-5 bottom-5 left-5 rounded-2xl border border-white/20 p-4 backdrop-blur-xl">
-              <p className="font-medium">{profile.name}</p>
-              {profile.professionalTitle ? (
-                <p className="text-muted-foreground mt-1 text-sm">
-                  {profile.professionalTitle}
-                </p>
-              ) : null}
-            </div>
           </div>
         </Reveal>
       </section>
@@ -112,17 +122,27 @@ export default async function HomePage() {
         <section className="section bg-muted/35 border-y">
           <div className="container">
             <SectionHeading
-              description={profile.shortIntroduction}
+              description="A closer look at the systems I have designed, built, and delivered for real people."
               eyebrow="Selected work"
-              title="Projects"
+              title="Work with a clear purpose"
             />
-            <div className="mt-12 grid gap-6 lg:grid-cols-2">
+            <div
+              className={
+                selectedProjects.length === 1
+                  ? "mt-12"
+                  : "mt-12 grid gap-6 lg:grid-cols-2"
+              }
+            >
               {(selectedProjects.length
                 ? selectedProjects
                 : projects.slice(0, 2)
               ).map((project, index) => (
                 <Reveal delay={index * 0.08} key={project.id}>
-                  <ProjectCard priority={index === 0} project={project} />
+                  <ProjectCard
+                    featured={selectedProjects.length === 1}
+                    priority={index === 0}
+                    project={project}
+                  />
                 </Reveal>
               ))}
             </div>
@@ -136,10 +156,14 @@ export default async function HomePage() {
       ) : null}
 
       {skills.length || experiencePreview.length ? (
-        <section className="section container grid gap-16 lg:grid-cols-2">
+        <section className="section container grid gap-16 lg:grid-cols-2 lg:gap-20">
           {skills.length ? (
             <div>
-              <SectionHeading eyebrow="Capabilities" title="Skills" />
+              <SectionHeading
+                description="The tools and practices I use to move from an idea to a dependable product."
+                eyebrow="Capabilities"
+                title="What I work with"
+              />
               <SkillHolders skills={skills} />
             </div>
           ) : null}
@@ -221,17 +245,19 @@ export default async function HomePage() {
       ) : null}
 
       <section className="container pb-20 sm:pb-32">
-        <div className="bg-foreground text-background overflow-hidden rounded-[2.5rem] p-8 sm:p-14">
+        <div className="bg-foreground text-background overflow-hidden rounded-2xl p-8 sm:p-14">
           {profile.availability ? (
             <p className="text-accent text-sm font-semibold">
               {profile.availability}
             </p>
           ) : null}
           <h2 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
-            {profile.name
-              ? `Get in touch with ${profile.name}`
-              : "Get in touch"}
+            Have a project, internship, or collaboration in mind?
           </h2>
+          <p className="mt-5 max-w-2xl text-base leading-7 opacity-70">
+            Tell me what you are building and where I can help. I would be glad
+            to hear about it.
+          </p>
           <Button
             asChild
             className="bg-background text-foreground hover:bg-background/90 mt-8"

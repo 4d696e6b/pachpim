@@ -70,21 +70,21 @@ export default async function ProjectDetailPage({ params }: Props) {
         }}
       />
       <article>
-        <header className="container pt-12 pb-16 sm:pt-20">
+        <header className="container pt-10 pb-10 sm:pt-16 sm:pb-12">
           <Button asChild size="sm" variant="ghost">
             <Link href="/projects">
               <ArrowLeft className="size-4" /> All projects
             </Link>
           </Button>
-          <div className="mt-10 max-w-4xl">
+          <div className="mt-9 max-w-5xl">
             <div className="flex flex-wrap gap-2">
               <Badge>{project.category}</Badge>
               <Badge>{project.statusLabel}</Badge>
               <Badge>{project.year}</Badge>
             </div>
-            <h1 className="display mt-6">{project.title}</h1>
-            <p className="text-muted-foreground mt-7 max-w-3xl text-xl leading-9 whitespace-pre-wrap">
-              {project.description}
+            <h1 className="page-title mt-6 max-w-5xl">{project.title}</h1>
+            <p className="text-muted-foreground mt-6 max-w-3xl text-lg leading-8 sm:text-xl">
+              {project.excerpt}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               {project.liveUrl && isSafeUrl(project.liveUrl) ? (
@@ -114,7 +114,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         </header>
 
         <div className="container">
-          <div className="relative aspect-[16/8] overflow-hidden rounded-[2.5rem] border bg-[linear-gradient(135deg,var(--muted),color-mix(in_srgb,var(--accent)_18%,var(--background)))]">
+          <div className="bg-muted relative aspect-[16/9] overflow-hidden rounded-2xl border">
             {project.coverImageUrl ? (
               <CmsImage
                 alt={`${project.title} cover`}
@@ -128,20 +128,33 @@ export default async function ProjectDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="section container grid gap-14 lg:grid-cols-[.7fr_1.3fr]">
+        <div className="section container grid gap-14 lg:grid-cols-[.65fr_1.35fr] lg:gap-20">
           <aside>
-            <p className="eyebrow">Built with</p>
+            <p className="eyebrow">Project details</p>
+            <dl className="mt-5 grid gap-4 border-y py-5 text-sm">
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">Year</dt>
+                <dd className="font-medium">{project.year}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">Status</dt>
+                <dd className="font-medium">{project.statusLabel}</dd>
+              </div>
+            </dl>
+            <p className="eyebrow mt-9">Built with</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {project.technologies.map((technology) => (
                 <Badge key={technology}>{technology}</Badge>
               ))}
             </div>
             {project.metrics.length ? (
-              <div className="mt-10 grid grid-cols-2 gap-3">
+              <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                 {project.metrics.map((metric) => (
                   <Card key={metric.label}>
                     <CardContent className="pt-6">
-                      <p className="text-2xl font-semibold">{metric.value}</p>
+                      <p className="text-xl font-semibold tracking-tight">
+                        {metric.value}
+                      </p>
                       <p className="text-muted-foreground mt-1 text-xs">
                         {metric.label}
                       </p>
@@ -153,6 +166,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           </aside>
           <div className="grid gap-12">
             {[
+              ["Overview", project.description],
               ["Challenge", project.challenge],
               ["Approach", project.approach],
               ["Process", project.process],
@@ -162,7 +176,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <h2 className="text-2xl font-semibold tracking-tight">
                   {title}
                 </h2>
-                <p className="text-muted-foreground mt-4 text-lg leading-8 whitespace-pre-wrap">
+                <p className="text-muted-foreground mt-4 text-base leading-8 whitespace-pre-wrap sm:text-lg">
                   {body}
                 </p>
               </section>
@@ -174,7 +188,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <section className="container grid gap-6 pb-24 md:grid-cols-2">
             {project.gallery.map((image, index) => (
               <div
-                className="relative aspect-[4/3] overflow-hidden rounded-3xl border"
+                className="relative aspect-[4/3] overflow-hidden rounded-2xl border"
                 key={image}
               >
                 <CmsImage

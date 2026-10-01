@@ -23,14 +23,14 @@ export default async function ContactPage() {
       <div className="grid gap-14 lg:grid-cols-[.8fr_1.2fr]">
         <div>
           <p className="eyebrow">Contact</p>
-          <h1 className="display mt-6">
-            {profile.name ? `Contact ${profile.name}` : "Contact"}
+          <h1 className="page-title mt-6">
+            Let&apos;s build something useful.
           </h1>
-          {profile.shortIntroduction ? (
-            <p className="text-muted-foreground mt-7 max-w-xl text-lg leading-8">
-              {profile.shortIntroduction}
-            </p>
-          ) : null}
+          <p className="text-muted-foreground mt-7 max-w-xl text-lg leading-8">
+            I am open to internships, freelance projects, and thoughtful
+            collaborations. Tell me what you are working on, what you need, and
+            your ideal timeline.
+          </p>
           <div className="mt-10 grid gap-3">
             {profile.email ? (
               <a
@@ -43,7 +43,7 @@ export default async function ContactPage() {
             <SocialLinks links={profile.socialLinks} variant="list" />
           </div>
         </div>
-        <Card>
+        <Card className="self-start">
           <CardContent className="p-6 sm:p-9">
             <ContactForm />
           </CardContent>

@@ -17,7 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SkillsPage() {
   const { skills } = await getPublicContent();
-  const extraSkills = skills.slice(6);
 
   return (
     <section className="section container">
@@ -27,16 +26,17 @@ export default async function SkillsPage() {
         </Link>
       </Button>
       <p className="eyebrow mt-8">Skills</p>
-      <h1 className="display mt-6 max-w-4xl">More skills</h1>
+      <h1 className="page-title mt-6 max-w-4xl">Tools and capabilities</h1>
       <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
-        Additional skills beyond the first six on the home page.
+        The technologies, systems, and collaborative skills I use to take a
+        product from an idea to a reliable release.
       </p>
-      <div className="mt-12 max-w-xl">
-        {extraSkills.length ? (
-          <SkillHolders skills={extraSkills} />
+      <div className="mt-12 max-w-4xl">
+        {skills.length ? (
+          <SkillHolders skills={skills} />
         ) : (
           <p className="text-muted-foreground text-sm">
-            All current skills are already listed on the home page.
+            Skills will be added here soon.
           </p>
         )}
       </div>

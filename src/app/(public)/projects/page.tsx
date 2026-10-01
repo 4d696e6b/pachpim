@@ -13,16 +13,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProjectsPage() {
-  const { projects, profile } = await getPublicContent();
+  const { projects } = await getPublicContent();
   return (
     <section className="section container">
       <p className="eyebrow">Projects</p>
-      <h1 className="display mt-6 max-w-4xl">Work</h1>
-      {profile.shortIntroduction ? (
-        <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
-          {profile.shortIntroduction}
-        </p>
-      ) : null}
+      <h1 className="page-title mt-6 max-w-4xl">Selected work</h1>
+      <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
+        Case studies covering the problem, technical decisions, delivery
+        process, and result behind each project.
+      </p>
       <div className="mt-12">
         <ProjectBrowser projects={projects} />
       </div>

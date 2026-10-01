@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { SiteMark } from "@/components/shared/site-mark";
 import {
   SocialLinks,
@@ -38,12 +36,6 @@ export function SiteFooter({
         </div>
         <div className="flex items-center gap-4">
           <SocialLinks links={socialLinks} />
-          <Link
-            className="text-muted-foreground hover:text-foreground text-sm"
-            href="/login"
-          >
-            Admin
-          </Link>
         </div>
       </div>
     </footer>

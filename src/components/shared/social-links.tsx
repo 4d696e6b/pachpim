@@ -57,7 +57,7 @@ export function SocialLinks({
           const Icon = iconForLink(link.label, link.url);
           return (
             <a
-              className="btn-neon bg-background hover:text-accent inline-flex items-center gap-3 rounded-full px-3 py-1.5 text-sm"
+              className="hover:text-accent inline-flex items-center gap-3 rounded-full py-1.5 text-sm transition-colors"
               href={link.url}
               key={`${link.label}-${link.url}`}
               rel="noreferrer noopener"
@@ -79,7 +79,7 @@ export function SocialLinks({
         return (
           <a
             aria-label={link.label}
-            className="btn-neon bg-background text-muted-foreground hover:text-foreground grid size-10 place-items-center rounded-full"
+            className="text-muted-foreground hover:bg-muted hover:text-foreground grid size-10 place-items-center rounded-full transition-colors"
             href={link.url}
             key={`${link.label}-${link.url}`}
             rel="noreferrer noopener"

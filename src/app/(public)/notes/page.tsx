@@ -13,16 +13,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NotesPage() {
-  const { notes, profile } = await getPublicContent();
+  const { notes } = await getPublicContent();
   return (
     <section className="section container">
       <p className="eyebrow">Notes</p>
-      <h1 className="display mt-6 max-w-4xl">Notes</h1>
-      {profile.shortIntroduction ? (
-        <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
-          {profile.shortIntroduction}
-        </p>
-      ) : null}
+      <h1 className="page-title mt-6 max-w-4xl">Notes and ideas</h1>
+      <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
+        What I am learning about software, systems, and building products that
+        people can understand and trust.
+      </p>
       <div className="mt-12">
         <NoteBrowser notes={notes} />
       </div>

@@ -5,19 +5,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "btn-neon inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "btn-neon-filled bg-foreground px-5 py-2.5 text-background hover:bg-foreground/85",
+          "bg-foreground px-5 py-2.5 text-background hover:-translate-y-0.5 hover:bg-foreground/88",
         accent:
-          "btn-neon-filled bg-accent px-5 py-2.5 text-accent-foreground shadow-sm hover:bg-accent/90",
+          "bg-accent px-5 py-2.5 text-accent-foreground hover:-translate-y-0.5 hover:bg-accent/90",
         outline:
           "border border-border bg-background/70 px-5 py-2.5 hover:bg-muted",
-        ghost: "bg-background px-4 py-2 hover:bg-muted",
+        ghost: "px-4 py-2 hover:bg-muted",
         destructive:
-          "btn-neon-filled bg-destructive px-5 py-2.5 text-white hover:bg-destructive/90",
+          "bg-destructive px-5 py-2.5 text-white hover:bg-destructive/90",
       },
       size: {
         sm: "h-9 px-4 text-xs",

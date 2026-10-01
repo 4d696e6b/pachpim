@@ -53,7 +53,10 @@ export function SiteHeader({ name }: { name: string }) {
             <Link
               className={cn(
                 "text-muted-foreground hover:bg-muted hover:text-foreground rounded-full px-4 py-2 text-sm transition",
-                pathname === item.href && "bg-muted text-foreground",
+                (pathname === item.href ||
+                  (item.href !== "/" &&
+                    pathname.startsWith(`${item.href}/`))) &&
+                  "bg-muted text-foreground",
               )}
               href={item.href}
               key={item.href}

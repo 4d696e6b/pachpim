@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArrowDownToLine } from "lucide-react";
 import { CmsImage } from "@/components/shared/cms-image";
 import { SectionHeading } from "@/components/shared/section-heading";
+import { groupSkills } from "@/components/shared/skill-holders";
 import { SocialLinks } from "@/components/shared/social-links";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AboutPage() {
   const { profile, skills, timeline, certifications, achievements } =
     await getPublicContent();
-  const groupedSkills = Map.groupBy(skills, (skill) => skill.category);
+  const groupedSkills = groupSkills(skills);
   const sidebar = (
     <Card>
       <CardContent className="pt-6">
@@ -59,9 +60,12 @@ export default async function AboutPage() {
     <>
       <section className="section container">
         <p className="eyebrow">About</p>
-        <h1 className="display mt-6 max-w-4xl">
-          {profile.professionalTitle || profile.name || "About"}
+        <h1 className="page-title mt-6 max-w-4xl">
+          Building useful systems with care and curiosity.
         </h1>
+        {profile.professionalTitle ? (
+          <p className="mt-5 font-medium">{profile.professionalTitle}</p>
+        ) : null}
         <div
           className={
             profile.biography
@@ -79,72 +83,74 @@ export default async function AboutPage() {
       </section>
 
       {skills.length || timeline.length ? (
-        <section className="section container grid gap-16 lg:grid-cols-2">
-          {skills.length ? (
-            <div>
-              <SectionHeading eyebrow="Skills" title="Toolkit" />
-              <div className="mt-10 grid gap-8 sm:grid-cols-2">
-                {[...groupedSkills.entries()].map(([category, items]) => (
-                  <div key={category}>
-                    <h3 className="font-semibold">{category}</h3>
-                    <ul className="text-muted-foreground mt-4 grid gap-2 text-sm">
-                      {items.map((skill) => (
-                        <li key={skill.id}>{skill.name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+        <section className="bg-muted/30 border-y">
+          <div className="section container grid gap-16 lg:grid-cols-2">
+            {skills.length ? (
+              <div>
+                <SectionHeading eyebrow="Skills" title="Toolkit" />
+                <div className="mt-10 grid gap-8 sm:grid-cols-2">
+                  {groupedSkills.map(([category, items]) => (
+                    <div key={category}>
+                      <h3 className="font-semibold">{category}</h3>
+                      <ul className="text-muted-foreground mt-4 grid gap-2 text-sm">
+                        {items.map((skill) => (
+                          <li key={skill.id}>{skill.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : null}
-          {timeline.length ? (
-            <div>
-              <SectionHeading
-                eyebrow="Experience & education"
-                title="Background"
-              />
-              <div className="mt-10 border-l">
-                {timeline.map((item) => {
-                  const isLearning = item.type === "education";
-                  return (
-                    <article
-                      className="relative pb-10 pl-8 last:pb-0"
-                      key={item.id}
-                    >
-                      <span
-                        className={
-                          isLearning
-                            ? "ring-background absolute top-1 -left-1.5 size-3 rounded-full bg-amber-500 ring-4"
-                            : "bg-accent ring-background absolute top-1 -left-1.5 size-3 rounded-full ring-4"
-                        }
-                      />
-                      <p
-                        className={
-                          isLearning
-                            ? "text-xs font-medium text-amber-600 dark:text-amber-400"
-                            : "text-accent text-xs font-medium"
-                        }
+            ) : null}
+            {timeline.length ? (
+              <div>
+                <SectionHeading
+                  eyebrow="Experience & education"
+                  title="Background"
+                />
+                <div className="mt-10 border-l">
+                  {timeline.map((item) => {
+                    const isLearning = item.type === "education";
+                    return (
+                      <article
+                        className="relative pb-10 pl-8 last:pb-0"
+                        key={item.id}
                       >
-                        {isLearning ? "Learning · " : null}
-                        {item.period}
-                      </p>
-                      <h3 className="mt-2 text-lg font-semibold">
-                        {item.title}
-                      </h3>
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        {item.organization}
-                      </p>
-                      {item.description ? (
-                        <p className="text-muted-foreground mt-3 text-sm leading-6">
-                          {item.description}
+                        <span
+                          className={
+                            isLearning
+                              ? "ring-background absolute top-1 -left-1.5 size-3 rounded-full bg-amber-500 ring-4"
+                              : "bg-accent ring-background absolute top-1 -left-1.5 size-3 rounded-full ring-4"
+                          }
+                        />
+                        <p
+                          className={
+                            isLearning
+                              ? "text-xs font-medium text-amber-600 dark:text-amber-400"
+                              : "text-accent text-xs font-medium"
+                          }
+                        >
+                          {isLearning ? "Learning · " : null}
+                          {item.period}
                         </p>
-                      ) : null}
-                    </article>
-                  );
-                })}
+                        <h3 className="mt-2 text-lg font-semibold">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground mt-1 text-sm">
+                          {item.organization}
+                        </p>
+                        {item.description ? (
+                          <p className="text-muted-foreground mt-3 text-sm leading-6">
+                            {item.description}
+                          </p>
+                        ) : null}
+                      </article>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </section>
       ) : null}
 

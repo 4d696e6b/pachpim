@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowUpRight, Code2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ProjectGallery } from "@/components/shared/project-gallery";
 import { CmsImage } from "@/components/shared/cms-image";
 import { ImageLightbox } from "@/components/shared/image-lightbox";
 import { JsonLd } from "@/components/shared/json-ld";
@@ -197,28 +198,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {project.gallery.length ? (
-          <section className="container grid gap-6 pb-24 md:grid-cols-2">
-            {project.gallery.map((image, index) => (
-              <Reveal delay={index * 0.08} key={image}>
-                <ImageLightbox
-                  alt={`${project.title} gallery image ${index + 1}`}
-                  src={image}
-                >
-                  <div className="gallery-image relative aspect-[4/3] overflow-hidden rounded-2xl border">
-                    <CmsImage
-                      alt={`${project.title} gallery image ${index + 1}`}
-                      className="object-cover transition-transform duration-700"
-                      fill
-                      sizes="(min-width: 768px) 50vw, 100vw"
-                      src={image}
-                    />
-                  </div>
-                </ImageLightbox>
-              </Reveal>
-            ))}
-          </section>
-        ) : null}
+        <ProjectGallery images={project.gallery} title={project.title} />
       </article>
       {related.length ? (
         <section className="bg-muted/35 border-t">

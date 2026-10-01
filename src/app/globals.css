@@ -618,3 +618,25 @@ summary {
     transform: none;
   }
 }
+
+.gallery-control {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  transition:
+    background-color 200ms,
+    transform 200ms;
+}
+.gallery-control:hover:not(:disabled) {
+  background: var(--muted);
+  transform: translateY(-2px);
+}
+.gallery-control:disabled {
+  opacity: 0.35;
+}
+.gallery-stage {
+  animation: overlay-in 260ms ease-out;
+}

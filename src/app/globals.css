@@ -57,6 +57,232 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--border) 18%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--border) 18%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 55%);
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.site-header {
+  animation: header-enter 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.availability-dot {
+  animation: status-pulse 2.8s ease-in-out infinite;
+}
+
+.portrait-frame::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(
+    110deg,
+    transparent 35%,
+    color-mix(in srgb, white 18%, transparent) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.portrait-frame:hover::after {
+  transform: translateX(120%);
+}
+
+.portrait-frame:hover .portrait-image {
+  transform: scale(1.025);
+}
+
+.motion-button svg {
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.motion-button:hover svg {
+  transform: translateX(2px);
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(18deg) scale(1.08);
+}
+
+.project-card {
+  perspective: 1200px;
+}
+
+.project-card-link {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.project-card-link:hover {
+  transform: translateY(-7px) rotateX(0.35deg);
+}
+
+.project-image-sheen {
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    color-mix(in srgb, white 12%, transparent) 48%,
+    transparent 66%
+  );
+  opacity: 0;
+  transform: translateX(-35%);
+  transition:
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 250ms ease;
+}
+
+.project-card:hover .project-image-sheen {
+  opacity: 1;
+  transform: translateX(35%);
+}
+
+.project-tech {
+  transition:
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.project-card:hover .project-tech {
+  color: var(--foreground);
+  transform: translateY(-1px);
+}
+
+.skill-group {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.skill-group:hover {
+  transform: translateY(-3px);
+}
+
+.skill-chip {
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.skill-chip:hover {
+  background: color-mix(in srgb, var(--accent) 14%, var(--muted));
+  color: var(--foreground);
+  transform: translateY(-3px);
+}
+
+.timeline-item {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.timeline-item:hover {
+  transform: translateX(5px);
+}
+
+.timeline-dot {
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.timeline-item:hover .timeline-dot {
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 15%, transparent);
+  transform: scale(1.2);
+}
+
+.achievement-card {
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 250ms ease,
+    background-color 250ms ease;
+}
+
+.achievement-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  transform: translateY(-5px);
+}
+
+.achievement-card:hover .achievement-icon {
+  transform: rotate(-7deg) scale(1.12);
+}
+
+.contact-card,
+.metric-card,
+.credential-card,
+.related-note {
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 250ms ease;
+}
+
+.contact-card:hover,
+.metric-card:hover,
+.credential-card:hover,
+.related-note:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  transform: translateY(-4px);
+}
+
+.gallery-image img {
+  transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-image:hover img {
+  transform: scale(1.025);
+}
+
+.note-row {
+  transition:
+    padding 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 250ms ease;
+}
+
+.note-row:hover {
+  background: color-mix(in srgb, var(--muted) 65%, transparent);
+  padding-inline: 1rem;
+}
+
+.cta-panel::after {
+  position: absolute;
+  right: -7rem;
+  bottom: -11rem;
+  z-index: -1;
+  width: 22rem;
+  height: 22rem;
+  border: 1px solid color-mix(in srgb, var(--background) 20%, transparent);
+  border-radius: 999px;
+  content: "";
+  animation: cta-drift 8s ease-in-out infinite;
+}
+
+.tech-rail {
+  overflow: hidden;
+}
+
+.tech-rail-track {
+  display: flex;
+  width: max-content;
+  animation: tech-marquee 32s linear infinite;
+}
+
+.tech-rail:hover .tech-rail-track {
+  animation-play-state: paused;
+}
+
 ::selection {
   background: color-mix(in srgb, var(--accent) 25%, transparent);
 }
@@ -163,6 +389,45 @@ select {
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes header-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 12%, transparent);
+    transform: scale(1.08);
+  }
+}
+
+@keyframes cta-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-18px, -14px, 0) scale(1.04);
+  }
+}
+
+@keyframes tech-marquee {
+  to {
+    transform: translateX(-50%);
   }
 }
 

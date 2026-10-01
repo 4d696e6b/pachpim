@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { CmsImage } from "@/components/shared/cms-image";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/form-controls";
 import { siteConfig } from "@/config/site";
@@ -76,34 +77,38 @@ export default async function NoteDetailPage({ params }: Props) {
             <ArrowLeft className="size-4" /> All notes
           </Link>
         </Button>
-        <header className="mx-auto mt-10 max-w-3xl">
-          <div className="flex flex-wrap gap-2">
-            <Badge>{note.category}</Badge>
-            {note.tags.map((tag) => (
-              <Badge key={tag}>#{tag}</Badge>
-            ))}
-          </div>
-          <h1 className="mt-6 text-4xl font-semibold tracking-[-0.045em] text-balance sm:text-6xl">
-            {note.title}
-          </h1>
-          <p className="text-muted-foreground mt-6 text-xl leading-9">
-            {note.excerpt}
-          </p>
-          <p className="text-muted-foreground mt-6 text-sm">
-            {formatDate(note.publishedAt)} · {note.readingTime} min read
-          </p>
-        </header>
+        <Reveal className="mx-auto mt-10 max-w-3xl">
+          <header>
+            <div className="flex flex-wrap gap-2">
+              <Badge>{note.category}</Badge>
+              {note.tags.map((tag) => (
+                <Badge key={tag}>#{tag}</Badge>
+              ))}
+            </div>
+            <h1 className="mt-6 text-4xl font-semibold tracking-[-0.045em] text-balance sm:text-6xl">
+              {note.title}
+            </h1>
+            <p className="text-muted-foreground mt-6 text-xl leading-9">
+              {note.excerpt}
+            </p>
+            <p className="text-muted-foreground mt-6 text-sm">
+              {formatDate(note.publishedAt)} · {note.readingTime} min read
+            </p>
+          </header>
+        </Reveal>
         {note.coverImageUrl ? (
-          <div className="relative mx-auto mt-10 aspect-[16/8] max-w-5xl overflow-hidden rounded-[2rem] border">
-            <CmsImage
-              alt={`${note.title} cover`}
-              className="object-cover"
-              fill
-              priority
-              sizes="(min-width: 1024px) 1024px, 100vw"
-              src={note.coverImageUrl}
-            />
-          </div>
+          <Reveal delay={0.08}>
+            <div className="gallery-image relative mx-auto mt-10 aspect-[16/8] max-w-5xl overflow-hidden rounded-[2rem] border">
+              <CmsImage
+                alt={`${note.title} cover`}
+                className="object-cover transition-transform duration-700"
+                fill
+                priority
+                sizes="(min-width: 1024px) 1024px, 100vw"
+                src={note.coverImageUrl}
+              />
+            </div>
+          </Reveal>
         ) : null}
         <div className="mx-auto mt-14 grid max-w-5xl gap-12 lg:grid-cols-[220px_1fr]">
           <aside className="hidden lg:block">
@@ -122,7 +127,9 @@ export default async function NoteDetailPage({ params }: Props) {
               </ol>
             </nav>
           </aside>
-          <MarkdownContent body={note.body} />
+          <Reveal>
+            <MarkdownContent body={note.body} />
+          </Reveal>
         </div>
       </article>
       {related.length ? (
@@ -132,7 +139,7 @@ export default async function NoteDetailPage({ params }: Props) {
             <div className="mt-7 grid gap-5 md:grid-cols-2">
               {related.map((item) => (
                 <Link
-                  className="bg-card hover:border-accent/35 rounded-3xl border p-6"
+                  className="related-note bg-card hover:border-accent/35 rounded-3xl border p-6 transition duration-300"
                   href={`/notes/${item.slug}`}
                   key={item.id}
                 >

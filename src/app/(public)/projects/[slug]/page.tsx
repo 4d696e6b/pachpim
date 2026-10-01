@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { CmsImage } from "@/components/shared/cms-image";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Reveal } from "@/components/shared/reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -76,7 +77,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               <ArrowLeft className="size-4" /> All projects
             </Link>
           </Button>
-          <div className="mt-9 max-w-5xl">
+          <Reveal className="mt-9 max-w-5xl">
             <div className="flex flex-wrap gap-2">
               <Badge>{project.category}</Badge>
               <Badge>{project.statusLabel}</Badge>
@@ -110,10 +111,10 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </Button>
               ) : null}
             </div>
-          </div>
+          </Reveal>
         </header>
 
-        <div className="container">
+        <Reveal className="container" delay={0.08}>
           <div className="bg-muted relative aspect-[16/9] overflow-hidden rounded-2xl border">
             {project.coverImageUrl ? (
               <CmsImage
@@ -126,44 +127,46 @@ export default async function ProjectDetailPage({ params }: Props) {
               />
             ) : null}
           </div>
-        </div>
+        </Reveal>
 
         <div className="section container grid gap-14 lg:grid-cols-[.65fr_1.35fr] lg:gap-20">
-          <aside>
-            <p className="eyebrow">Project details</p>
-            <dl className="mt-5 grid gap-4 border-y py-5 text-sm">
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Year</dt>
-                <dd className="font-medium">{project.year}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Status</dt>
-                <dd className="font-medium">{project.statusLabel}</dd>
-              </div>
-            </dl>
-            <p className="eyebrow mt-9">Built with</p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {project.technologies.map((technology) => (
-                <Badge key={technology}>{technology}</Badge>
-              ))}
-            </div>
-            {project.metrics.length ? (
-              <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                {project.metrics.map((metric) => (
-                  <Card key={metric.label}>
-                    <CardContent className="pt-6">
-                      <p className="text-xl font-semibold tracking-tight">
-                        {metric.value}
-                      </p>
-                      <p className="text-muted-foreground mt-1 text-xs">
-                        {metric.label}
-                      </p>
-                    </CardContent>
-                  </Card>
+          <Reveal direction="left">
+            <aside>
+              <p className="eyebrow">Project details</p>
+              <dl className="mt-5 grid gap-4 border-y py-5 text-sm">
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-muted-foreground">Year</dt>
+                  <dd className="font-medium">{project.year}</dd>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-muted-foreground">Status</dt>
+                  <dd className="font-medium">{project.statusLabel}</dd>
+                </div>
+              </dl>
+              <p className="eyebrow mt-9">Built with</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {project.technologies.map((technology) => (
+                  <Badge key={technology}>{technology}</Badge>
                 ))}
               </div>
-            ) : null}
-          </aside>
+              {project.metrics.length ? (
+                <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  {project.metrics.map((metric) => (
+                    <Card className="metric-card" key={metric.label}>
+                      <CardContent className="pt-6">
+                        <p className="text-xl font-semibold tracking-tight">
+                          {metric.value}
+                        </p>
+                        <p className="text-muted-foreground mt-1 text-xs">
+                          {metric.label}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : null}
+            </aside>
+          </Reveal>
           <div className="grid gap-12">
             {[
               ["Overview", project.description],
@@ -171,15 +174,17 @@ export default async function ProjectDetailPage({ params }: Props) {
               ["Approach", project.approach],
               ["Process", project.process],
               ["Outcome", project.outcome],
-            ].map(([title, body]) => (
-              <section key={title}>
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  {title}
-                </h2>
-                <p className="text-muted-foreground mt-4 text-base leading-8 whitespace-pre-wrap sm:text-lg">
-                  {body}
-                </p>
-              </section>
+            ].map(([title, body], index) => (
+              <Reveal delay={index * 0.06} key={title}>
+                <section>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    {title}
+                  </h2>
+                  <p className="text-muted-foreground mt-4 text-base leading-8 whitespace-pre-wrap sm:text-lg">
+                    {body}
+                  </p>
+                </section>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -187,18 +192,17 @@ export default async function ProjectDetailPage({ params }: Props) {
         {project.gallery.length ? (
           <section className="container grid gap-6 pb-24 md:grid-cols-2">
             {project.gallery.map((image, index) => (
-              <div
-                className="relative aspect-[4/3] overflow-hidden rounded-2xl border"
-                key={image}
-              >
-                <CmsImage
-                  alt={`${project.title} gallery image ${index + 1}`}
-                  className="object-cover"
-                  fill
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  src={image}
-                />
-              </div>
+              <Reveal delay={index * 0.08} key={image}>
+                <div className="gallery-image relative aspect-[4/3] overflow-hidden rounded-2xl border">
+                  <CmsImage
+                    alt={`${project.title} gallery image ${index + 1}`}
+                    className="object-cover transition-transform duration-700"
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    src={image}
+                  />
+                </div>
+              </Reveal>
             ))}
           </section>
         ) : null}

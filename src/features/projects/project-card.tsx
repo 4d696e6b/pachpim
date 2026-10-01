@@ -18,11 +18,11 @@ export function ProjectCard({
   featured?: boolean;
 }) {
   return (
-    <article className={cn("group", className)}>
+    <article className={cn("project-card group", className)}>
       <Link
         aria-label={`View ${project.title} project`}
         className={cn(
-          "bg-card hover:border-accent/40 block overflow-hidden rounded-2xl border transition duration-300 hover:-translate-y-1",
+          "project-card-link bg-card hover:border-accent/40 block overflow-hidden rounded-2xl border transition duration-500",
           featured && "lg:grid lg:grid-cols-[1.25fr_.75fr]",
         )}
         href={`/projects/${project.slug}`}
@@ -36,7 +36,7 @@ export function ProjectCard({
           {project.coverImageUrl ? (
             <CmsImage
               alt={`${project.title} cover`}
-              className="object-cover transition duration-500 group-hover:scale-[1.03]"
+              className="object-cover transition duration-700 ease-out group-hover:scale-[1.045]"
               fill
               priority={priority}
               sizes={
@@ -53,6 +53,7 @@ export function ProjectCard({
               </span>
             </div>
           )}
+          <span className="project-image-sheen pointer-events-none absolute inset-0" />
         </div>
         <div
           className={cn(
@@ -65,7 +66,7 @@ export function ProjectCard({
               <Badge>{project.category}</Badge>
               <Badge>{project.year}</Badge>
             </div>
-            <ArrowUpRight className="text-muted-foreground group-hover:text-accent size-5 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight className="text-muted-foreground group-hover:text-accent size-5 transition duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:rotate-6" />
           </div>
           <h2
             className={cn(
@@ -85,7 +86,9 @@ export function ProjectCard({
           </p>
           <div className="text-muted-foreground mt-5 flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium">
             {project.technologies.slice(0, 4).map((technology) => (
-              <span key={technology}>{technology}</span>
+              <span className="project-tech" key={technology}>
+                {technology}
+              </span>
             ))}
           </div>
           {featured ? (

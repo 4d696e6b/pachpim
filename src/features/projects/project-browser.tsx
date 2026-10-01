@@ -4,6 +4,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 
 import { EmptyState } from "@/components/shared/empty-state";
+import { Stagger, StaggerItem } from "@/components/shared/motion";
 import { Input } from "@/components/ui/form-controls";
 import { ProjectCard } from "@/features/projects/project-card";
 import type { PublicProject } from "@/lib/server/public-content";
@@ -92,7 +93,7 @@ export function ProjectBrowser({ projects }: { projects: PublicProject[] }) {
         </p>
       ) : null}
       {visible.length ? (
-        <div
+        <Stagger
           className={
             showFilters
               ? "mt-5 grid gap-6 md:grid-cols-2"
@@ -100,9 +101,11 @@ export function ProjectBrowser({ projects }: { projects: PublicProject[] }) {
           }
         >
           {visible.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <StaggerItem key={project.id}>
+              <ProjectCard project={project} />
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       ) : (
         <div className="mt-5">
           <EmptyState

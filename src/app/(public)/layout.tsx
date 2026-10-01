@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { AmbientMotion, ScrollProgress } from "@/components/shared/motion";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
 
 export default async function PublicLayout({
@@ -12,6 +13,8 @@ export default async function PublicLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
+      <ScrollProgress />
+      <AmbientMotion />
       <SiteHeader name={identity.name} />
       <main className="flex-1">{children}</main>
       <SiteFooter

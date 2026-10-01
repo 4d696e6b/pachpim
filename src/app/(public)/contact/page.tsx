@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mail } from "lucide-react";
 
+import { Reveal } from "@/components/shared/reveal";
 import { SocialLinks } from "@/components/shared/social-links";
 import { Card, CardContent } from "@/components/ui/card";
 import { ContactForm } from "@/features/messages/contact-form";
@@ -21,7 +22,7 @@ export default async function ContactPage() {
   return (
     <section className="section container">
       <div className="grid gap-14 lg:grid-cols-[.8fr_1.2fr]">
-        <div>
+        <Reveal direction="left">
           <p className="eyebrow">Contact</p>
           <h1 className="page-title mt-6">
             Let&apos;s build something useful.
@@ -42,12 +43,14 @@ export default async function ContactPage() {
             ) : null}
             <SocialLinks links={profile.socialLinks} variant="list" />
           </div>
-        </div>
-        <Card className="self-start">
-          <CardContent className="p-6 sm:p-9">
-            <ContactForm />
-          </CardContent>
-        </Card>
+        </Reveal>
+        <Reveal className="self-start" delay={0.1} direction="right">
+          <Card className="contact-card">
+            <CardContent className="p-6 sm:p-9">
+              <ContactForm />
+            </CardContent>
+          </Card>
+        </Reveal>
       </div>
     </section>
   );

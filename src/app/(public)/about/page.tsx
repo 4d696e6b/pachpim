@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { ArrowDownToLine } from "lucide-react";
 import { CmsImage } from "@/components/shared/cms-image";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { groupSkills } from "@/components/shared/skill-holders";
+import { Reveal } from "@/components/shared/reveal";
 import { SocialLinks } from "@/components/shared/social-links";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { isImageAssetUrl } from "@/lib/media";
+import { groupSkills } from "@/lib/skills";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
 import { isSafeUrl } from "@/lib/security";
 
@@ -59,27 +60,29 @@ export default async function AboutPage() {
   return (
     <>
       <section className="section container">
-        <p className="eyebrow">About</p>
-        <h1 className="page-title mt-6 max-w-4xl">
-          Building useful systems with care and curiosity.
-        </h1>
-        {profile.professionalTitle ? (
-          <p className="mt-5 font-medium">{profile.professionalTitle}</p>
-        ) : null}
-        <div
-          className={
-            profile.biography
-              ? "mt-12 grid gap-10 lg:grid-cols-[1.2fr_.8fr]"
-              : "mt-12 max-w-md"
-          }
-        >
-          {profile.biography ? (
-            <p className="text-muted-foreground max-w-3xl text-xl leading-9">
-              {profile.biography}
-            </p>
+        <Reveal>
+          <p className="eyebrow">About</p>
+          <h1 className="page-title mt-6 max-w-4xl">
+            Building useful systems with care and curiosity.
+          </h1>
+          {profile.professionalTitle ? (
+            <p className="mt-5 font-medium">{profile.professionalTitle}</p>
           ) : null}
-          {sidebar}
-        </div>
+          <div
+            className={
+              profile.biography
+                ? "mt-12 grid gap-10 lg:grid-cols-[1.2fr_.8fr]"
+                : "mt-12 max-w-md"
+            }
+          >
+            {profile.biography ? (
+              <p className="text-muted-foreground max-w-3xl text-xl leading-9">
+                {profile.biography}
+              </p>
+            ) : null}
+            {sidebar}
+          </div>
+        </Reveal>
       </section>
 
       {skills.length || timeline.length ? (
@@ -89,15 +92,17 @@ export default async function AboutPage() {
               <div>
                 <SectionHeading eyebrow="Skills" title="Toolkit" />
                 <div className="mt-10 grid gap-8 sm:grid-cols-2">
-                  {groupedSkills.map(([category, items]) => (
-                    <div key={category}>
-                      <h3 className="font-semibold">{category}</h3>
-                      <ul className="text-muted-foreground mt-4 grid gap-2 text-sm">
-                        {items.map((skill) => (
-                          <li key={skill.id}>{skill.name}</li>
-                        ))}
-                      </ul>
-                    </div>
+                  {groupedSkills.map(([category, items], index) => (
+                    <Reveal delay={index * 0.05} key={category}>
+                      <div className="skill-group">
+                        <h3 className="font-semibold">{category}</h3>
+                        <ul className="text-muted-foreground mt-4 grid gap-2 text-sm">
+                          {items.map((skill) => (
+                            <li key={skill.id}>{skill.name}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </Reveal>
                   ))}
                 </div>
               </div>
@@ -109,42 +114,41 @@ export default async function AboutPage() {
                   title="Background"
                 />
                 <div className="mt-10 border-l">
-                  {timeline.map((item) => {
+                  {timeline.map((item, index) => {
                     const isLearning = item.type === "education";
                     return (
-                      <article
-                        className="relative pb-10 pl-8 last:pb-0"
-                        key={item.id}
-                      >
-                        <span
-                          className={
-                            isLearning
-                              ? "ring-background absolute top-1 -left-1.5 size-3 rounded-full bg-amber-500 ring-4"
-                              : "bg-accent ring-background absolute top-1 -left-1.5 size-3 rounded-full ring-4"
-                          }
-                        />
-                        <p
-                          className={
-                            isLearning
-                              ? "text-xs font-medium text-amber-600 dark:text-amber-400"
-                              : "text-accent text-xs font-medium"
-                          }
-                        >
-                          {isLearning ? "Learning · " : null}
-                          {item.period}
-                        </p>
-                        <h3 className="mt-2 text-lg font-semibold">
-                          {item.title}
-                        </h3>
-                        <p className="text-muted-foreground mt-1 text-sm">
-                          {item.organization}
-                        </p>
-                        {item.description ? (
-                          <p className="text-muted-foreground mt-3 text-sm leading-6">
-                            {item.description}
+                      <Reveal delay={index * 0.06} key={item.id}>
+                        <article className="timeline-item relative pb-10 pl-8 last:pb-0">
+                          <span
+                            className={
+                              isLearning
+                                ? "ring-background absolute top-1 -left-1.5 size-3 rounded-full bg-amber-500 ring-4"
+                                : "bg-accent ring-background absolute top-1 -left-1.5 size-3 rounded-full ring-4"
+                            }
+                          />
+                          <p
+                            className={
+                              isLearning
+                                ? "text-xs font-medium text-amber-600 dark:text-amber-400"
+                                : "text-accent text-xs font-medium"
+                            }
+                          >
+                            {isLearning ? "Learning · " : null}
+                            {item.period}
                           </p>
-                        ) : null}
-                      </article>
+                          <h3 className="mt-2 text-lg font-semibold">
+                            {item.title}
+                          </h3>
+                          <p className="text-muted-foreground mt-1 text-sm">
+                            {item.organization}
+                          </p>
+                          {item.description ? (
+                            <p className="text-muted-foreground mt-3 text-sm leading-6">
+                              {item.description}
+                            </p>
+                          ) : null}
+                        </article>
+                      </Reveal>
                     );
                   })}
                 </div>
@@ -171,7 +175,7 @@ export default async function AboutPage() {
                   (value) => value && isImageAssetUrl(value),
                 );
                 const card = (
-                  <Card className="h-full overflow-hidden">
+                  <Card className="credential-card h-full overflow-hidden">
                     <div className="bg-muted relative aspect-4/3 overflow-hidden">
                       {imageUrl ? (
                         <CmsImage
@@ -218,18 +222,20 @@ export default async function AboutPage() {
           ) : null}
           {achievements.length ? (
             <div className="mt-12 grid gap-4 md:grid-cols-2">
-              {achievements.map((item) => (
-                <Card key={item.id}>
-                  <CardContent className="p-6">
-                    <p className="eyebrow">Achievement</p>
-                    <h3 className="mt-3 font-semibold tracking-tight">
-                      {item.title}
-                    </h3>
-                    <p className="text-muted-foreground mt-2 text-sm leading-6">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
+              {achievements.map((item, index) => (
+                <Reveal delay={index * 0.06} key={item.id}>
+                  <Card className="achievement-card h-full">
+                    <CardContent className="p-6">
+                      <p className="eyebrow">Achievement</p>
+                      <h3 className="mt-3 font-semibold tracking-tight">
+                        {item.title}
+                      </h3>
+                      <p className="text-muted-foreground mt-2 text-sm leading-6">
+                        {item.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Reveal>
               ))}
             </div>
           ) : null}

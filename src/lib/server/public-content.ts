@@ -360,6 +360,66 @@ function asIso(value: unknown, fallback = new Date(0).toISOString()) {
   return fallback;
 }
 
+function asStringList(value: unknown) {
+  return Array.isArray(value)
+    ? value.map((item) => String(item).trim()).filter(Boolean)
+    : [];
+}
+
+function asMetrics(value: unknown): PublicProject["metrics"] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const record = item as { label?: unknown; value?: unknown };
+    const label = String(record.label ?? "").trim();
+    const metricValue = String(record.value ?? "").trim();
+    return label && metricValue ? [{ label, value: metricValue }] : [];
+  });
+}
+
+function normalizeProject(
+  id: string,
+  data: Record<string, unknown>,
+): PublicProject {
+  return {
+    id,
+    slug: String(data.slug ?? ""),
+    title: String(data.title ?? ""),
+    excerpt: String(data.excerpt ?? ""),
+    description: String(data.description ?? ""),
+    category: String(data.category ?? ""),
+    year: Number(data.year ?? 0),
+    technologies: asStringList(data.technologies),
+    featured: Boolean(data.featured),
+    coverImageUrl: data.coverImageUrl ? String(data.coverImageUrl) : undefined,
+    gallery: asStringList(data.gallery),
+    statusLabel: String(data.statusLabel ?? ""),
+    challenge: String(data.challenge ?? ""),
+    approach: String(data.approach ?? ""),
+    process: String(data.process ?? ""),
+    outcome: String(data.outcome ?? ""),
+    metrics: asMetrics(data.metrics),
+    liveUrl: data.liveUrl ? String(data.liveUrl) : undefined,
+    repositoryUrl: data.repositoryUrl ? String(data.repositoryUrl) : undefined,
+    updatedAt: asIso(data.updatedAt),
+  };
+}
+
+function normalizeNote(id: string, data: Record<string, unknown>): PublicNote {
+  return {
+    id,
+    slug: String(data.slug ?? ""),
+    title: String(data.title ?? ""),
+    excerpt: String(data.excerpt ?? ""),
+    body: String(data.body ?? ""),
+    category: String(data.category ?? ""),
+    tags: asStringList(data.tags),
+    readingTime: Number(data.readingTime ?? 0),
+    coverImageUrl: data.coverImageUrl ? String(data.coverImageUrl) : undefined,
+    publishedAt: asIso(data.publishedAt),
+  };
+}
+
 async function loadPublicContent() {
   try {
     const db = getAdminFirestore();
@@ -384,26 +444,12 @@ async function loadPublicContent() {
     ]);
 
     const projects = projectsSnapshot.docs
-      .map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-            updatedAt: asIso(doc.get("updatedAt")),
-          }) as PublicProject,
-      )
+      .map((doc) => normalizeProject(doc.id, doc.data()))
       .sort(
         (a, b) => Number(b.featured) - Number(a.featured) || b.year - a.year,
       );
     const notes = notesSnapshot.docs
-      .map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-            publishedAt: asIso(doc.get("publishedAt")),
-          }) as PublicNote,
-      )
+      .map((doc) => normalizeNote(doc.id, doc.data()))
       .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
     const profile = profileSnapshot.exists
       ? normalizeProfile(profileSnapshot.data() ?? {})

@@ -3,6 +3,12 @@ import Link from "next/link";
 
 import { CmsImage } from "@/components/shared/cms-image";
 import { JsonLd } from "@/components/shared/json-ld";
+import {
+  FloatingFrame,
+  HeroVisual,
+  Stagger,
+  StaggerItem,
+} from "@/components/shared/motion";
 import { Reveal } from "@/components/shared/reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
@@ -52,71 +58,114 @@ export default async function HomePage() {
         ]}
       />
       <section className="container grid min-h-[calc(100vh-4.5rem)] items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.15fr_.85fr]">
-        <Reveal>
-          <p className="eyebrow flex items-center gap-2">
-            <span className="bg-accent size-2 rounded-full" />
-            {profile.availability}
-          </p>
-          <h1 className="display mt-6 max-w-3xl text-balance">
-            I build practical web products and real-time systems.
-          </h1>
-          <p className="mt-6 font-medium">
-            {identity.name}
-            {profile.professionalTitle
-              ? ` · ${profile.professionalTitle}`
-              : null}
-          </p>
-          <p className="text-muted-foreground mt-7 max-w-2xl text-lg leading-8 sm:text-xl">
-            {profile.shortIntroduction}
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Button asChild size="lg" variant="accent">
-              <Link href="/projects">
-                View projects <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/contact">
-                <Mail className="size-4" /> Contact me
-              </Link>
-            </Button>
-            {resumeUrl ? (
-              <Button asChild size="lg" variant="ghost">
-                <a href={resumeUrl} rel="noreferrer noopener" target="_blank">
-                  <ArrowDownToLine className="size-4" /> Résumé
-                </a>
+        <Stagger className="relative" delay={0.05}>
+          <StaggerItem>
+            <p className="eyebrow flex items-center gap-2">
+              <span className="availability-dot bg-accent size-2 rounded-full" />
+              {profile.availability}
+            </p>
+          </StaggerItem>
+          <StaggerItem>
+            <h1 className="display mt-6 max-w-3xl text-balance">
+              I build practical web products and real-time systems.
+            </h1>
+          </StaggerItem>
+          <StaggerItem>
+            <p className="mt-6 font-medium">
+              {identity.name}
+              {profile.professionalTitle
+                ? ` · ${profile.professionalTitle}`
+                : null}
+            </p>
+          </StaggerItem>
+          <StaggerItem>
+            <p className="text-muted-foreground mt-7 max-w-2xl text-lg leading-8 sm:text-xl">
+              {profile.shortIntroduction}
+            </p>
+          </StaggerItem>
+          <StaggerItem>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Button asChild size="lg" variant="accent">
+                <Link href="/projects">
+                  View projects <ArrowRight className="size-4" />
+                </Link>
               </Button>
-            ) : null}
-          </div>
-          <p className="text-muted-foreground mt-8 flex items-center gap-2 text-sm">
-            <MapPin className="size-4" /> {profile.location}
-          </p>
-        </Reveal>
-        <Reveal className="relative mx-auto w-full max-w-md" delay={0.12}>
-          <div className="bg-muted relative aspect-[4/5] overflow-hidden rounded-2xl border">
-            {profile.profilePhotoUrl ? (
-              <CmsImage
-                alt={`${profile.name} portrait`}
-                className="object-cover"
-                fill
-                priority
-                sizes="(min-width: 1024px) 420px, 80vw"
-                src={profile.profilePhotoUrl}
-              />
-            ) : (
-              <div className="absolute inset-0 grid place-items-center">
-                <span className="text-foreground/10 text-8xl font-semibold tracking-tighter">
-                  {profile.name
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")
-                    .slice(0, 2)}
-                </span>
-              </div>
-            )}
-          </div>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/contact">
+                  <Mail className="size-4" /> Contact me
+                </Link>
+              </Button>
+              {resumeUrl ? (
+                <Button asChild size="lg" variant="ghost">
+                  <a href={resumeUrl} rel="noreferrer noopener" target="_blank">
+                    <ArrowDownToLine className="size-4" /> Résumé
+                  </a>
+                </Button>
+              ) : null}
+            </div>
+          </StaggerItem>
+          <StaggerItem>
+            <p className="text-muted-foreground mt-8 flex items-center gap-2 text-sm">
+              <MapPin className="size-4" /> {profile.location}
+            </p>
+          </StaggerItem>
+        </Stagger>
+        <Reveal
+          className="relative mx-auto w-full max-w-md"
+          delay={0.18}
+          direction="right"
+        >
+          <HeroVisual>
+            <FloatingFrame className="portrait-frame bg-muted relative aspect-[4/5] overflow-hidden rounded-2xl border">
+              {profile.profilePhotoUrl ? (
+                <CmsImage
+                  alt={`${profile.name} portrait`}
+                  className="portrait-image object-cover transition-transform duration-700"
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 420px, 80vw"
+                  src={profile.profilePhotoUrl}
+                />
+              ) : (
+                <div className="absolute inset-0 grid place-items-center">
+                  <span className="text-foreground/10 text-8xl font-semibold tracking-tighter">
+                    {profile.name
+                      .split(" ")
+                      .map((part) => part[0])
+                      .join("")
+                      .slice(0, 2)}
+                  </span>
+                </div>
+              )}
+            </FloatingFrame>
+          </HeroVisual>
         </Reveal>
       </section>
+
+      <div className="tech-rail border-y" aria-hidden>
+        <div className="tech-rail-track py-3 font-mono text-xs tracking-[0.14em] uppercase">
+          {[0, 1].map((copy) => (
+            <div className="flex shrink-0 items-center gap-10 pr-10" key={copy}>
+              {[
+                "TypeScript",
+                "Next.js",
+                "React",
+                "Firebase",
+                "Node.js",
+                "Real-time systems",
+                "Accessible UI",
+              ].map((item) => (
+                <span
+                  className="text-muted-foreground flex items-center gap-3"
+                  key={`${copy}-${item}`}
+                >
+                  <span className="text-accent">◆</span> {item}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
       {projects.length ? (
         <section className="section bg-muted/35 border-y">
@@ -171,17 +220,19 @@ export default async function HomePage() {
             <div>
               <p className="eyebrow">Experience</p>
               <div className="mt-7 border-l">
-                {experiencePreview.map((item) => (
-                  <div className="relative pb-8 pl-7 last:pb-0" key={item.id}>
-                    <span className="border-background bg-accent absolute top-1.5 -left-1.5 size-3 rounded-full border-2" />
-                    <p className="text-accent text-xs font-medium">
-                      {item.period}
-                    </p>
-                    <h3 className="mt-2 font-semibold">{item.title}</h3>
-                    <p className="text-muted-foreground mt-1 text-sm">
-                      {item.organization}
-                    </p>
-                  </div>
+                {experiencePreview.map((item, index) => (
+                  <Reveal delay={index * 0.08} key={item.id}>
+                    <div className="timeline-item relative pb-8 pl-7 last:pb-0">
+                      <span className="timeline-dot border-background bg-accent absolute top-1.5 -left-1.5 size-3 rounded-full border-2" />
+                      <p className="text-accent text-xs font-medium">
+                        {item.period}
+                      </p>
+                      <h3 className="mt-2 font-semibold">{item.title}</h3>
+                      <p className="text-muted-foreground mt-1 text-sm">
+                        {item.organization}
+                      </p>
+                    </div>
+                  </Reveal>
                 ))}
               </div>
               {hasMoreExperience ? (
@@ -201,16 +252,18 @@ export default async function HomePage() {
           <div className="section container grid gap-8 lg:grid-cols-[.65fr_1.35fr]">
             <SectionHeading eyebrow="Achievements" title="Highlights" />
             <div className="grid gap-4 sm:grid-cols-2">
-              {achievements.slice(0, 4).map((item) => (
-                <Card key={item.id}>
-                  <CardContent className="pt-6">
-                    <Award className="text-accent size-5" />
-                    <h3 className="mt-5 font-semibold">{item.title}</h3>
-                    <p className="text-muted-foreground mt-2 text-sm leading-6">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
+              {achievements.slice(0, 4).map((item, index) => (
+                <Reveal delay={index * 0.08} key={item.id}>
+                  <Card className="achievement-card h-full">
+                    <CardContent className="pt-6">
+                      <Award className="achievement-icon text-accent size-5 transition-transform duration-300" />
+                      <h3 className="mt-5 font-semibold">{item.title}</h3>
+                      <p className="text-muted-foreground mt-2 text-sm leading-6">
+                        {item.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -221,50 +274,53 @@ export default async function HomePage() {
         <section className="section container">
           <SectionHeading eyebrow="Latest notes" title="Notes" />
           <div className="mt-10 divide-y border-y">
-            {notes.slice(0, 2).map((note) => (
-              <Link
-                className="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center"
-                href={`/notes/${note.slug}`}
-                key={note.id}
-              >
-                <div>
-                  <h3 className="group-hover:text-accent text-xl font-semibold">
-                    {note.title}
-                  </h3>
-                  <p className="text-muted-foreground mt-2 text-sm">
-                    {note.excerpt}
+            {notes.slice(0, 2).map((note, index) => (
+              <Reveal delay={index * 0.08} key={note.id}>
+                <Link
+                  className="note-row group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center"
+                  href={`/notes/${note.slug}`}
+                >
+                  <div>
+                    <h3 className="group-hover:text-accent text-xl font-semibold transition-colors">
+                      {note.title}
+                    </h3>
+                    <p className="text-muted-foreground mt-2 text-sm">
+                      {note.excerpt}
+                    </p>
+                  </div>
+                  <p className="text-muted-foreground text-sm transition-transform group-hover:-translate-x-1">
+                    {formatDate(note.publishedAt)}
                   </p>
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  {formatDate(note.publishedAt)}
-                </p>
-              </Link>
+                </Link>
+              </Reveal>
             ))}
           </div>
         </section>
       ) : null}
 
       <section className="container pb-20 sm:pb-32">
-        <div className="bg-foreground text-background overflow-hidden rounded-2xl p-8 sm:p-14">
-          {profile.availability ? (
-            <p className="text-accent text-sm font-semibold">
-              {profile.availability}
+        <Reveal>
+          <div className="cta-panel bg-foreground text-background relative isolate overflow-hidden rounded-2xl p-8 sm:p-14">
+            {profile.availability ? (
+              <p className="text-accent text-sm font-semibold">
+                {profile.availability}
+              </p>
+            ) : null}
+            <h2 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
+              Have a project, internship, or collaboration in mind?
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 opacity-70">
+              Tell me what you are building and where I can help. I would be
+              glad to hear about it.
             </p>
-          ) : null}
-          <h2 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
-            Have a project, internship, or collaboration in mind?
-          </h2>
-          <p className="mt-5 max-w-2xl text-base leading-7 opacity-70">
-            Tell me what you are building and where I can help. I would be glad
-            to hear about it.
-          </p>
-          <Button
-            asChild
-            className="bg-background text-foreground hover:bg-background/90 mt-8"
-          >
-            <Link href="/contact">Start a conversation</Link>
-          </Button>
-        </div>
+            <Button
+              asChild
+              className="bg-background text-foreground hover:bg-background/90 mt-8"
+            >
+              <Link href="/contact">Start a conversation</Link>
+            </Button>
+          </div>
+        </Reveal>
       </section>
     </>
   );

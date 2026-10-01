@@ -1,6 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { motion } from "framer-motion";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { useState, type CSSProperties } from "react";
 
 import { SiteMark } from "@/components/shared/site-mark";
+import { useScrollDirection } from "@/components/shared/motion";
 import { Button } from "@/components/ui/button";
 import { mainNavigation, siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -18,7 +20,7 @@ function ThemeToggle() {
   return (
     <Button
       aria-label="Toggle color theme"
-      className="rounded-full"
+      className="theme-toggle rounded-full"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       size="icon"
       variant="ghost"
@@ -32,16 +34,21 @@ function ThemeToggle() {
 export function SiteHeader({ name }: { name: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const hidden = useScrollDirection();
   const brandName = name.trim() || siteConfig.name;
 
   return (
-    <header className="border-border/60 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-xl">
+    <motion.header
+      animate={{ y: hidden && !open ? "-100%" : 0 }}
+      className="site-header border-border/60 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-xl"
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="container flex h-18 items-center justify-between">
         <Link
-          className="flex items-center gap-2.5 text-sm font-semibold tracking-tight"
+          className="brand-link group flex items-center gap-2.5 text-sm font-semibold tracking-tight"
           href="/"
         >
-          <SiteMark className="size-7 rounded-lg" />
+          <SiteMark className="brand-mark size-7 rounded-lg transition-transform duration-300 group-hover:scale-105 group-hover:rotate-6" />
           {brandName}
           <span className="text-accent">.</span>
         </Link>
@@ -49,21 +56,30 @@ export function SiteHeader({ name }: { name: string }) {
           aria-label="Primary navigation"
           className="hidden items-center gap-1 md:flex"
         >
-          {mainNavigation.map((item) => (
-            <Link
-              className={cn(
-                "text-muted-foreground hover:bg-muted hover:text-foreground rounded-full px-4 py-2 text-sm transition",
-                (pathname === item.href ||
-                  (item.href !== "/" &&
-                    pathname.startsWith(`${item.href}/`))) &&
-                  "bg-muted text-foreground",
-              )}
-              href={item.href}
-              key={item.href}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {mainNavigation.map((item) => {
+            const active =
+              pathname === item.href ||
+              (item.href !== "/" && pathname.startsWith(`${item.href}/`));
+            return (
+              <Link
+                className={cn(
+                  "text-muted-foreground hover:text-foreground relative isolate overflow-hidden rounded-full px-4 py-2 text-sm transition-colors",
+                  active && "text-foreground",
+                )}
+                href={item.href}
+                key={item.href}
+              >
+                {active ? (
+                  <motion.span
+                    className="bg-muted absolute inset-0 -z-10 rounded-full"
+                    layoutId="active-navigation"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                ) : null}
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
         <div className="flex items-center gap-1">
           <ThemeToggle />
@@ -116,6 +132,6 @@ export function SiteHeader({ name }: { name: string }) {
           </Dialog.Root>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

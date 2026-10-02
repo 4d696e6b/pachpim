@@ -22,11 +22,11 @@ export function Breadcrumbs() {
                   aria-current="page"
                   className="text-foreground capitalize"
                 >
-                  {part.replaceAll("-", " ")}
+                  {part === "notes" ? "Experience" : part.replaceAll("-", " ")}
                 </span>
               ) : (
                 <Link className="hover:text-foreground capitalize" href={href}>
-                  {part}
+                  {part === "notes" ? "Experience" : part}
                 </Link>
               )}
             </li>

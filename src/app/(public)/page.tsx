@@ -272,13 +272,13 @@ export default async function HomePage() {
 
       {notes.length ? (
         <section className="section container">
-          <SectionHeading eyebrow="Latest notes" title="Notes" />
+          <SectionHeading eyebrow="Latest updates" title="Experience" />
           <div className="mt-10 divide-y border-y">
             {notes.slice(0, 2).map((note, index) => (
               <Reveal delay={index * 0.08} key={note.id}>
                 <Link
                   className="note-row group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center"
-                  href={`/notes/${note.slug}`}
+                  href={`/experience/${note.slug}`}
                 >
                   <div>
                     <h3 className="group-hover:text-accent text-xl font-semibold transition-colors">

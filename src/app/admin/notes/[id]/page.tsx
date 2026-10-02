@@ -30,8 +30,10 @@ export default async function EditNotePage({
   };
   return (
     <div className="mx-auto max-w-[1600px]">
-      <p className="eyebrow">Notes</p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight">Edit note</h1>
+      <p className="eyebrow">Experience</p>
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight">
+        Edit update
+      </h1>
       <p className="text-muted-foreground mt-2">
         Reading time updates automatically on save.
       </p>

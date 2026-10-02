@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/admin", label: "Overview", icon: Home },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
-  { href: "/admin/notes", label: "Notes", icon: FileText },
+  { href: "/admin/notes", label: "Experience", icon: FileText },
   { href: "/admin/profile", label: "Profile", icon: UserRound },
   { href: "/admin/media", label: "Media", icon: ImageIcon },
   { href: "/admin/messages", label: "Messages", icon: MessageSquare },
@@ -57,9 +57,7 @@ function Navigation({
             key={href}
             onClick={close}
             style={
-              staggerLinks
-                ? ({ "--nav-i": index } as CSSProperties)
-                : undefined
+              staggerLinks ? ({ "--nav-i": index } as CSSProperties) : undefined
             }
           >
             <Icon className="size-4" />

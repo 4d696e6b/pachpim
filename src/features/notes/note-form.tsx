@@ -32,8 +32,8 @@ const defaults: NoteFormValues = {
   title: "",
   slug: "",
   excerpt: "",
-  body: "## Start writing\n\nShare a useful idea.",
-  category: "",
+  body: "",
+  category: "Update",
   tags: "",
   status: "draft",
   coverImageUrl: "",
@@ -104,7 +104,7 @@ export function NoteForm({
     if (!cover?.trim()) {
       setValue("coverImageUrl", url, { shouldDirty: true });
     }
-    toast.success("Photo inserted. Publish the note when you are ready.");
+    toast.success("Photo inserted. Publish the update when you are ready.");
   }
 
   async function submit(values: NoteFormValues) {
@@ -124,7 +124,7 @@ export function NoteForm({
     }
     reset(values);
     setSaving(false);
-    toast.success(id ? "Note updated." : "Note created.");
+    toast.success(id ? "Update saved." : "Update created.");
     router.replace(`/admin/notes/${result.id}`);
     router.refresh();
   }
@@ -138,7 +138,7 @@ export function NoteForm({
     >
       <fieldset disabled={saving} className="min-w-0">
         <EditorWorkspace
-          kind="Note"
+          kind="Experience"
           dirty={isDirty}
           preview={<NotePreview values={values} />}
         >
@@ -170,21 +170,31 @@ export function NoteForm({
               <FieldError>{errors.slug?.message}</FieldError>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="excerpt">Excerpt</Label>
+              <Label htmlFor="excerpt">Short summary</Label>
               <Textarea id="excerpt" rows={3} {...register("excerpt")} />
               <FieldError>{errors.excerpt?.message}</FieldError>
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="grid gap-2">
-                <Label htmlFor="category">Category</Label>
-                <Input id="category" {...register("category")} />
+                <Label htmlFor="category">Post type</Label>
+                <Input
+                  id="category"
+                  list="post-types"
+                  {...register("category")}
+                />
+                <datalist id="post-types">
+                  <option value="Update" />
+                  <option value="Milestone" />
+                  <option value="Announcement" />
+                  <option value="Learning" />
+                </datalist>
                 <FieldError>{errors.category?.message}</FieldError>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="tags">Tags</Label>
                 <Input
                   id="tags"
-                  placeholder="Design, Engineering"
+                  placeholder="Learning, Open source"
                   {...register("tags")}
                 />
               </div>
@@ -226,15 +236,15 @@ export function NoteForm({
             </div>
             <MediaUploader onUploaded={addPhotoToNote} />
             <p className="text-muted-foreground text-xs">
-              Upload an image (up to 700 KB) to insert it into your note.
-              Uploaded images are public; your note stays a draft until you
+              Upload an image (up to 700 KB) to insert it into your update.
+              Uploaded images are public; your update stays a draft until you
               publish it.
             </p>
           </section>
 
           <section className="bg-card rounded-3xl border p-6">
             <div className="mb-5 flex items-center justify-between gap-4">
-              <h2 className="text-lg font-semibold">Markdown content</h2>
+              <h2 className="text-lg font-semibold">Your update</h2>
               <Button
                 onClick={() => setPreview((value) => !value)}
                 size="sm"
@@ -305,7 +315,7 @@ export function NoteForm({
       </fieldset>
       <div className="bg-background/90 sticky bottom-4 flex justify-end rounded-2xl border p-3 shadow-xl backdrop-blur">
         <Button disabled={saving} type="submit" variant="accent">
-          <Save className="size-4" /> {saving ? "Saving…" : "Save note"}
+          <Save className="size-4" /> {saving ? "Saving…" : "Save update"}
         </Button>
       </div>
     </form>

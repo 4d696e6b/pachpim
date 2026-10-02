@@ -18,14 +18,16 @@ export default async function AdminNotesPage() {
       <div className="flex items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Publishing</p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">Notes</h1>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight">
+            Experience
+          </h1>
           <p className="text-muted-foreground mt-2">
-            Write in Markdown, preview, and publish when ready.
+            Share a milestone, a short status, or an announcement.
           </p>
         </div>
         <Button asChild variant="accent">
           <Link href="/admin/notes/new">
-            <Plus className="size-4" /> New note
+            <Plus className="size-4" /> New update
           </Link>
         </Button>
       </div>
@@ -44,7 +46,7 @@ export default async function AdminNotesPage() {
                     </div>
                     <p className="text-muted-foreground mt-2 text-sm">
                       {doc.get("category")} · {doc.get("readingTime") ?? 1} min
-                      read · /notes/{doc.get("slug")}
+                      read · /experience/{doc.get("slug")}
                     </p>
                   </div>
                   <NoteRowActions id={doc.id} title={doc.get("title")} />
@@ -56,12 +58,12 @@ export default async function AdminNotesPage() {
           <EmptyState
             action={
               <Button asChild>
-                <Link href="/admin/notes/new">Write first note</Link>
+                <Link href="/admin/notes/new">Write first update</Link>
               </Button>
             }
             description="Draft ideas in Markdown and publish only when they are ready."
             icon={FileText}
-            title="No notes yet"
+            title="No updates yet"
           />
         )}
       </div>

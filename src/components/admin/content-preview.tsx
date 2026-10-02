@@ -87,16 +87,18 @@ export function ProjectPreview({
 export function NotePreview({ values }: { values: Partial<NoteFormValues> }) {
   return (
     <article className="break-words">
-      <p className="eyebrow">{values.category || "Notebook"}</p>
+      <p className="eyebrow">{values.category || "Update"}</p>
       <h2 className="mt-4 text-3xl font-semibold tracking-tight">
-        {values.title || "An idea worth sharing"}
+        {values.title || "A moment worth sharing"}
       </h2>
       <p className="text-muted-foreground mt-4 leading-7">
-        {values.excerpt || "Introduce the idea your reader will take away."}
+        {values.excerpt || "A short summary of your experience."}
       </p>
-      <PreviewCover src={values.coverImageUrl} />
+      {values.coverImageUrl ? (
+        <PreviewCover src={values.coverImageUrl} />
+      ) : null}
       <MarkdownContent
-        body={values.body || "Start writing to see your note here."}
+        body={values.body || "Start writing to preview your update."}
       />
     </article>
   );

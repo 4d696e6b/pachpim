@@ -94,7 +94,7 @@ export default async function AdminDashboardPage() {
       icon: FolderKanban,
     },
     {
-      label: "Notes",
+      label: "Experience",
       value: stats.notes,
       detail: `${stats.publishedNotes} published`,
       icon: FileText,
@@ -129,7 +129,7 @@ export default async function AdminDashboardPage() {
           <Button asChild variant="outline">
             <Link href="/admin/notes/new">
               <Plus className="size-4" />
-              New note
+              New update
             </Link>
           </Button>
           <Button asChild variant="accent">

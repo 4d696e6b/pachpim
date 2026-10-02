@@ -19,7 +19,7 @@ export function NoteRowActions({ id, title }: { id: string; title: string }) {
         </Link>
       </Button>
       <ConfirmDialog
-        description="This permanently removes the note and releases its URL slug."
+        description="This permanently removes the update and releases its URL slug."
         onConfirm={() =>
           startTransition(async () => {
             try {

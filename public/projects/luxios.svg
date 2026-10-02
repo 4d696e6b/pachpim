@@ -12,7 +12,7 @@
   <rect x="170" y="145" width="1260" height="88" rx="30" fill="#101f37"/>
   <circle cx="225" cy="189" r="11" fill="#e97c71"/><circle cx="265" cy="189" r="11" fill="#e5be6b"/><circle cx="305" cy="189" r="11" fill="#70c8a6"/>
   <text x="800" y="198" text-anchor="middle" fill="#8b9bb2" font-family="monospace" font-size="24" letter-spacing="6">LUXIOS · THEME PREVIEW</text>
-  <path d="M300 390h130l-38 116 86 0-184 206 44-146h-78z" fill="url(#gold)" filter="url(#glow)"/>
+  <image href="/projects/luxios-crown.png" x="214" y="292" width="310" height="310" preserveAspectRatio="xMidYMid meet"/>
   <text x="540" y="390" fill="#dfe7f2" font-family="monospace" font-size="48">const theme = {</text>
   <text x="540" y="472" fill="#8bc7e8" font-family="monospace" font-size="42">surface:</text><text x="780" y="472" fill="#e8c77d" font-family="monospace" font-size="42"> &quot;midnight-navy&quot;,</text>
   <text x="540" y="548" fill="#8bc7e8" font-family="monospace" font-size="42">accent:</text><text x="720" y="548" fill="#e8c77d" font-family="monospace" font-size="42"> &quot;champagne-gold&quot;,</text>

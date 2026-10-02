@@ -6,6 +6,7 @@ import { Stagger, StaggerItem } from "@/components/shared/motion";
 import { Reveal } from "@/components/shared/reveal";
 import { ProfileFlipCard } from "@/components/shared/profile-flip-card";
 import { SectionHeading } from "@/components/shared/section-heading";
+import { TechRail } from "@/components/shared/tech-rail";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SkillHolders } from "@/components/shared/skill-holders";
@@ -122,30 +123,7 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      <div className="tech-rail border-y" aria-hidden>
-        <div className="tech-rail-track py-3 font-mono text-xs tracking-[0.14em] uppercase">
-          {[0, 1].map((copy) => (
-            <div className="flex shrink-0 items-center gap-10 pr-10" key={copy}>
-              {[
-                "TypeScript",
-                "Next.js",
-                "React",
-                "Firebase",
-                "Node.js",
-                "Real-time systems",
-                "Accessible UI",
-              ].map((item) => (
-                <span
-                  className="text-muted-foreground flex items-center gap-3"
-                  key={`${copy}-${item}`}
-                >
-                  <span className="text-accent">◆</span> {item}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
+      <TechRail />
 
       {projects.length ? (
         <section className="section bg-muted/35 border-y">

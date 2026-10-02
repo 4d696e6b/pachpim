@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Luxios code theme</title>
+  <desc id="desc">A dark navy code editor surface with champagne gold syntax accents.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071224"/><stop offset="1" stop-color="#13233c"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7df9d"/><stop offset="1" stop-color="#c89e52"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="18" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1600" height="1000" rx="44" fill="url(#bg)"/>
+  <circle cx="1320" cy="180" r="260" fill="#d5ae62" opacity=".08"/><circle cx="1320" cy="180" r="180" fill="none" stroke="#e8c77d" stroke-opacity=".15"/>
+  <rect x="170" y="145" width="1260" height="710" rx="30" fill="#0a172c" stroke="#50627b" stroke-opacity=".5" stroke-width="3"/>
+  <rect x="170" y="145" width="1260" height="88" rx="30" fill="#101f37"/>
+  <circle cx="225" cy="189" r="11" fill="#e97c71"/><circle cx="265" cy="189" r="11" fill="#e5be6b"/><circle cx="305" cy="189" r="11" fill="#70c8a6"/>
+  <text x="800" y="198" text-anchor="middle" fill="#8b9bb2" font-family="monospace" font-size="24" letter-spacing="6">LUXIOS · THEME PREVIEW</text>
+  <path d="M300 390h130l-38 116 86 0-184 206 44-146h-78z" fill="url(#gold)" filter="url(#glow)"/>
+  <text x="540" y="390" fill="#dfe7f2" font-family="monospace" font-size="48">const theme = {</text>
+  <text x="540" y="472" fill="#8bc7e8" font-family="monospace" font-size="42">surface:</text><text x="780" y="472" fill="#e8c77d" font-family="monospace" font-size="42"> &quot;midnight-navy&quot;,</text>
+  <text x="540" y="548" fill="#8bc7e8" font-family="monospace" font-size="42">accent:</text><text x="720" y="548" fill="#e8c77d" font-family="monospace" font-size="42"> &quot;champagne-gold&quot;,</text>
+  <text x="540" y="624" fill="#8bc7e8" font-family="monospace" font-size="42">variants:</text><text x="790" y="624" fill="#d5a8d5" font-family="monospace" font-size="42"> 4</text>
+  <text x="540" y="700" fill="#dfe7f2" font-family="monospace" font-size="48">};</text>
+  <rect x="540" y="760" width="240" height="8" rx="4" fill="#e8c77d"/><rect x="800" y="760" width="330" height="8" rx="4" fill="#324867"/>
+</svg>

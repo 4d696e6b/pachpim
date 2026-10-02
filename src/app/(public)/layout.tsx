@@ -15,8 +15,8 @@ export default async function PublicLayout({
   return (
     <>
       <SiteIntro />
+      <ScrollProgress />
       <div className="public-shell flex min-h-screen flex-col">
-        <ScrollProgress />
         <AmbientMotion />
         <SiteHeader name={identity.name} />
         <main className="flex-1">{children}</main>

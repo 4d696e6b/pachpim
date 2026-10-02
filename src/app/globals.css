@@ -86,27 +86,50 @@ body::before {
   animation: status-pulse 2.8s ease-in-out infinite;
 }
 
-.portrait-frame::after {
+@property --portrait-neon-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes portrait-neon-run {
+  to {
+    --portrait-neon-angle: 360deg;
+  }
+}
+
+.portrait-frame::before {
   position: absolute;
   inset: 0;
+  z-index: 20;
+  padding: 1.5px;
+  border-radius: inherit;
   content: "";
-  background: linear-gradient(
-    110deg,
-    transparent 35%,
-    color-mix(in srgb, white 18%, transparent) 50%,
-    transparent 65%
+  background: conic-gradient(
+    from var(--portrait-neon-angle),
+    transparent 0deg 276deg,
+    rgb(255 255 255 / 18%) 298deg,
+    rgb(255 255 255 / 100%) 322deg,
+    transparent 350deg
   );
-  transform: translateX(-120%);
-  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  filter: drop-shadow(0 0 5px rgb(255 255 255 / 85%));
+  transition: opacity 220ms ease;
   pointer-events: none;
 }
 
-.portrait-frame:hover::after {
-  transform: translateX(120%);
+.portrait-frame:hover::before,
+.portrait-frame:focus-within::before {
+  animation: portrait-neon-run 1.25s linear infinite;
+  opacity: 1;
 }
 
 .portrait-frame:hover .portrait-image {
-  transform: scale(1.025);
+  transform: scale(1.015);
 }
 
 .motion-button svg {
@@ -648,7 +671,7 @@ summary {
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: none;
   }
 }
 

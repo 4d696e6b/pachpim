@@ -2,12 +2,7 @@ import { ArrowDownToLine, ArrowRight, Award, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 
 import { JsonLd } from "@/components/shared/json-ld";
-import {
-  FloatingFrame,
-  HeroVisual,
-  Stagger,
-  StaggerItem,
-} from "@/components/shared/motion";
+import { Stagger, StaggerItem } from "@/components/shared/motion";
 import { Reveal } from "@/components/shared/reveal";
 import { ProfileFlipCard } from "@/components/shared/profile-flip-card";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -115,17 +110,15 @@ export default async function HomePage() {
           delay={0.18}
           direction="right"
         >
-          <HeroVisual>
-            <FloatingFrame className="portrait-frame bg-muted relative aspect-[4/5] overflow-hidden rounded-2xl border">
-              <ProfileFlipCard
-                availability={profile.availability}
-                imageUrl={profile.profilePhotoUrl}
-                location={profile.location}
-                name={identity.name}
-                role={profile.professionalTitle}
-              />
-            </FloatingFrame>
-          </HeroVisual>
+          <div className="portrait-frame bg-muted relative aspect-[4/5] overflow-hidden rounded-2xl border">
+            <ProfileFlipCard
+              availability={profile.availability}
+              imageUrl={profile.profilePhotoUrl}
+              location={profile.location}
+              name={identity.name}
+              role={profile.professionalTitle}
+            />
+          </div>
         </Reveal>
       </section>
 

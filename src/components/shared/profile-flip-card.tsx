@@ -51,21 +51,29 @@ export function ProfileFlipCard({
       onPointerLeave={(event) => {
         if (event.pointerType === "mouse") setFlipped(false);
       }}
+      style={{ perspective: 1400 }}
       type="button"
     >
       <motion.span
-        animate={{ rotateY: flipped ? 180 : 0 }}
-        className="relative block size-full"
+        animate={{
+          rotateY: flipped ? 180 : 0,
+          scale: flipped ? [1, 0.985, 1] : [1, 0.985, 1],
+        }}
+        className="relative block size-full will-change-transform"
         style={{ transformStyle: "preserve-3d" }}
         transition={{
-          duration: reduceMotion ? 0.01 : 0.58,
-          ease: [0.22, 1, 0.36, 1],
+          duration: reduceMotion ? 0.01 : 0.72,
+          ease: [0.16, 1, 0.3, 1],
+          times: [0, 0.5, 1],
         }}
       >
         <span
           aria-hidden={flipped}
           className="bg-muted absolute inset-0 block"
-          style={{ backfaceVisibility: "hidden" }}
+          style={{
+            backfaceVisibility: "hidden",
+            transform: "translateZ(1px)",
+          }}
         >
           {imageUrl ? (
             <CmsImage
@@ -97,7 +105,7 @@ export function ProfileFlipCard({
           className="absolute inset-0 block bg-[#0b1110] p-5 text-[#d8e2df] sm:p-7"
           style={{
             backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
+            transform: "rotateY(180deg) translateZ(1px)",
           }}
         >
           <span className="flex items-center justify-between border-b border-white/10 pb-4">

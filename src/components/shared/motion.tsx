@@ -59,7 +59,7 @@ export function ScrollProgress() {
   return (
     <motion.div
       aria-hidden
-      className="bg-accent fixed top-0 right-0 left-0 z-[70] h-0.5 origin-left"
+      className="bg-accent fixed inset-x-0 top-0 z-[80] h-[3px] origin-left shadow-[0_0_10px_color-mix(in_srgb,var(--accent)_70%,transparent)] will-change-transform"
       style={{ scaleX }}
     />
   );

@@ -1,7 +1,6 @@
 import { ArrowDownToLine, ArrowRight, Award, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 
-import { CmsImage } from "@/components/shared/cms-image";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
   FloatingFrame,
@@ -10,6 +9,7 @@ import {
   StaggerItem,
 } from "@/components/shared/motion";
 import { Reveal } from "@/components/shared/reveal";
+import { ProfileFlipCard } from "@/components/shared/profile-flip-card";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -117,26 +117,13 @@ export default async function HomePage() {
         >
           <HeroVisual>
             <FloatingFrame className="portrait-frame bg-muted relative aspect-[4/5] overflow-hidden rounded-2xl border">
-              {profile.profilePhotoUrl ? (
-                <CmsImage
-                  alt={`${profile.name} portrait`}
-                  className="portrait-image object-cover transition-transform duration-700"
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 420px, 80vw"
-                  src={profile.profilePhotoUrl}
-                />
-              ) : (
-                <div className="absolute inset-0 grid place-items-center">
-                  <span className="text-foreground/10 text-8xl font-semibold tracking-tighter">
-                    {profile.name
-                      .split(" ")
-                      .map((part) => part[0])
-                      .join("")
-                      .slice(0, 2)}
-                  </span>
-                </div>
-              )}
+              <ProfileFlipCard
+                availability={profile.availability}
+                imageUrl={profile.profilePhotoUrl}
+                location={profile.location}
+                name={identity.name}
+                role={profile.professionalTitle}
+              />
             </FloatingFrame>
           </HeroVisual>
         </Reveal>

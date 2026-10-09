@@ -8,12 +8,12 @@ const projects = [
     slug: "reposetup-development-stack-cli",
     title: "RepoSetup — development stack CLI",
     excerpt:
-      "An open-source CLI for composing development stacks, checking compatibility, and previewing installation plans before changing a project.",
+      "A terminal-first stack composer and installer with compatibility checks, setup plans, and recovery guidance.",
     description:
-      "RepoSetup turns a declarative configuration into a typed installation plan. Published on npm as rsetup, it brings stack composition, compatibility checks, and setup tooling into a terminal workflow.\n\nThis is an early-stage open-source release. Integration maturity varies, and the project documents its current verification limits.",
+      "RepoSetup turns a declarative configuration into a typed installation plan. Published on npm as rsetup, it brings stack composition, compatibility checks, and setup tooling into a terminal workflow.\n\nVersion 0.2.3 improves generated-project reliability, database setup guidance, npm recovery diagnostics, and live acceptance coverage while documenting the integrations and environments that remain outside its qualification boundary.",
     category: "Developer tooling",
     year: 2026,
-    statusLabel: "Early release · npm",
+    statusLabel: "Public release · v0.2.3",
     technologies: ["TypeScript", "Node.js", "Commander", "Vitest", "pnpm"],
     coverImageUrl: "/projects/reposetup.svg",
     gallery: [],
@@ -26,10 +26,10 @@ const projects = [
     process:
       "Build a TypeScript workspace with separate core, registry, integration, and CLI packages. Provide interactive and configuration-driven workflows, existing-project detection, and health checks. Use the same planner for dry runs and execution, then document which integration recipes have been verified.",
     outcome:
-      "Released rsetup 0.1.1 on npm with create, add, remove, search, stack, doctor, and export workflows. The repository includes tests and records integration maturity explicitly; no integration is labeled stable in this release.",
+      "Released rsetup 0.2.3 on npm with create, add, remove, search, stack, doctor, and export workflows. The release adds stronger generated-project checks for Prisma, Drizzle, SQLAlchemy, and Mongoose, clearer PostgreSQL and Docker guidance, and bounded, redacted recovery diagnostics. Integration maturity remains documented rather than overstated.",
     metrics: [
       { label: "Distribution", value: "npm · rsetup" },
-      { label: "Release", value: "0.1.1" },
+      { label: "Release", value: "0.2.3" },
       { label: "License", value: "MIT" },
     ],
     featured: true,
@@ -37,6 +37,8 @@ const projects = [
     sources: [
       "https://github.com/4d696e6b/RepoSetup",
       "https://www.npmjs.com/package/rsetup",
+      "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.3",
+      "https://github.com/4d696e6b/RepoSetup/blob/main/docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md",
     ],
   },
   {

@@ -28,7 +28,7 @@ const project = {
   liveLabel: "Read paper / Download PDF",
   repositoryUrl: null,
   author: "Pacharapol Pimpa",
-  publishedAt: Timestamp.fromDate(new Date("2026-10-10T17:00:00.000Z")),
+  publishedAt: Timestamp.fromDate(new Date("2026-10-11T05:00:00.000Z")),
   challenge:
     "AI comparisons often rank candidates by one benchmark score or a partial inference price. A deployment decision also needs an explicit acceptable-quality floor, evidence about degradation from a reference, complete policy costs, and hard operational limits. Missing or incompatible evidence must remain visible instead of being filled with optimistic assumptions.",
   approach:
@@ -57,7 +57,7 @@ const article = {
   category: "Learning",
   tags: ["AI evaluation", "Model selection", "Research"],
   coverImageUrl: "/projects/ai-quality-cost-research.svg?v=1",
-  publishedAt: Timestamp.fromDate(new Date("2026-10-10T17:00:00.000Z")),
+  publishedAt: Timestamp.fromDate(new Date("2026-10-11T05:00:00.000Z")),
   body: `Most AI comparisons start with a leaderboard: which model received the highest score? Real deployment decisions are harder. The best-scoring option may exceed the budget or latency limit, while the cheapest option may fail too often to be useful.
 
 My paper, **Measuring AI Performance and Selecting Models Under Quality and Cost Constraints**, asks how to make that trade-off explicit and reviewable.

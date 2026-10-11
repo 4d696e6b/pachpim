@@ -17,6 +17,7 @@ export interface PublicProject {
   year: number;
   technologies: string[];
   featured: boolean;
+  sortOrder?: number;
   coverImageUrl?: string;
   gallery: string[];
   statusLabel: string;
@@ -26,7 +27,10 @@ export interface PublicProject {
   outcome: string;
   metrics: { label: string; value: string }[];
   liveUrl?: string;
+  liveLabel?: string;
   repositoryUrl?: string;
+  author?: string;
+  publishedAt?: string;
   updatedAt: string;
 }
 
@@ -391,6 +395,8 @@ function normalizeProject(
     year: Number(data.year ?? 0),
     technologies: asStringList(data.technologies),
     featured: Boolean(data.featured),
+    sortOrder:
+      typeof data.sortOrder === "number" ? Number(data.sortOrder) : undefined,
     coverImageUrl: data.coverImageUrl ? String(data.coverImageUrl) : undefined,
     gallery: asStringList(data.gallery),
     statusLabel: String(data.statusLabel ?? ""),
@@ -400,7 +406,10 @@ function normalizeProject(
     outcome: String(data.outcome ?? ""),
     metrics: asMetrics(data.metrics),
     liveUrl: data.liveUrl ? String(data.liveUrl) : undefined,
+    liveLabel: data.liveLabel ? String(data.liveLabel) : undefined,
     repositoryUrl: data.repositoryUrl ? String(data.repositoryUrl) : undefined,
+    author: data.author ? String(data.author) : undefined,
+    publishedAt: data.publishedAt ? asIso(data.publishedAt) : undefined,
     updatedAt: asIso(data.updatedAt),
   };
 }
@@ -446,7 +455,11 @@ async function loadPublicContent() {
     const projects = projectsSnapshot.docs
       .map((doc) => normalizeProject(doc.id, doc.data()))
       .sort(
-        (a, b) => Number(b.featured) - Number(a.featured) || b.year - a.year,
+        (a, b) =>
+          Number(b.featured) - Number(a.featured) ||
+          (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999) ||
+          b.updatedAt.localeCompare(a.updatedAt) ||
+          b.year - a.year,
       );
     const notes = notesSnapshot.docs
       .map((doc) => normalizeNote(doc.id, doc.data()))

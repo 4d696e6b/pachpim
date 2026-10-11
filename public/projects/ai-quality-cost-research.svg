@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">AI quality and cost selection research</title>
+  <desc id="desc">A research diagram showing quality evidence and operational constraints leading to least-cost model selection.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#071611"/>
+      <stop offset="1" stop-color="#102a22"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#77e1bd"/>
+      <stop offset="1" stop-color="#3da989"/>
+    </linearGradient>
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" rx="48" fill="url(#background)"/>
+  <circle cx="1370" cy="130" r="310" fill="#77e1bd" opacity=".045"/>
+  <circle cx="1370" cy="130" r="215" fill="none" stroke="#77e1bd" stroke-opacity=".12" stroke-width="2"/>
+  <text x="100" y="120" fill="#77e1bd" font-family="monospace" font-size="22" letter-spacing="6">INDEPENDENT RESEARCH · 11 OCTOBER 2026</text>
+  <text x="100" y="235" fill="#eff8f4" font-family="sans-serif" font-size="68" font-weight="650">Selecting AI models</text>
+  <text x="100" y="315" fill="#eff8f4" font-family="sans-serif" font-size="68" font-weight="650">under quality + cost constraints</text>
+  <text x="103" y="370" fill="#9fb8ae" font-family="sans-serif" font-size="25">Pacharapol Pimpa · Independent research manuscript · Not peer reviewed</text>
+
+  <g transform="translate(100 465)">
+    <rect width="390" height="225" rx="24" fill="#10251f" stroke="#315d50" stroke-width="2"/>
+    <text x="32" y="54" fill="#77e1bd" font-family="monospace" font-size="20" letter-spacing="3">01 · QUALITY EVIDENCE</text>
+    <text x="32" y="111" fill="#e2eee9" font-family="sans-serif" font-size="29">Absolute quality floor</text>
+    <text x="32" y="154" fill="#e2eee9" font-family="sans-serif" font-size="29">Non-inferiority bound</text>
+    <text x="32" y="197" fill="#91aa9f" font-family="sans-serif" font-size="21">Task-specific and uncertainty-aware</text>
+  </g>
+
+  <path d="M515 578h95" stroke="#77e1bd" stroke-width="4" stroke-linecap="round"/>
+  <path d="m592 562 20 16-20 16" fill="none" stroke="#77e1bd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g transform="translate(635 465)">
+    <rect width="390" height="225" rx="24" fill="#10251f" stroke="#315d50" stroke-width="2"/>
+    <text x="32" y="54" fill="#77e1bd" font-family="monospace" font-size="20" letter-spacing="3">02 · HARD CONSTRAINTS</text>
+    <text x="32" y="111" fill="#e2eee9" font-family="sans-serif" font-size="29">Budget + latency</text>
+    <text x="32" y="154" fill="#e2eee9" font-family="sans-serif" font-size="29">Memory + resource limits</text>
+    <text x="32" y="197" fill="#91aa9f" font-family="sans-serif" font-size="21">Complete operational accounting</text>
+  </g>
+
+  <path d="M1050 578h95" stroke="#77e1bd" stroke-width="4" stroke-linecap="round"/>
+  <path d="m1127 562 20 16-20 16" fill="none" stroke="#77e1bd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g transform="translate(1170 465)">
+    <rect width="330" height="225" rx="24" fill="url(#accent)" filter="url(#soft-glow)" opacity=".22"/>
+    <rect width="330" height="225" rx="24" fill="#173d31" stroke="#77e1bd" stroke-width="2"/>
+    <text x="28" y="54" fill="#9df0d3" font-family="monospace" font-size="20" letter-spacing="3">03 · SELECT</text>
+    <text x="28" y="118" fill="#f4fbf8" font-family="sans-serif" font-size="34" font-weight="650">Least projected</text>
+    <text x="28" y="160" fill="#f4fbf8" font-family="sans-serif" font-size="34" font-weight="650">total cost</text>
+    <text x="28" y="200" fill="#acd0c3" font-family="sans-serif" font-size="20">or return no supported choice</text>
+  </g>
+
+  <line x1="100" y1="780" x2="1500" y2="780" stroke="#315d50"/>
+  <text x="100" y="840" fill="#d6e6df" font-family="sans-serif" font-size="26" font-weight="600">COMPLETED</text>
+  <text x="270" y="840" fill="#91aa9f" font-family="sans-serif" font-size="24">Azure weighted-selector study · Dry Bean + Bike Sharing</text>
+  <text x="100" y="900" fill="#d6e6df" font-family="sans-serif" font-size="26" font-weight="600">PROPOSED</text>
+  <text x="270" y="900" fill="#91aa9f" font-family="sans-serif" font-size="24">Confidence-bound least-cost framework · prospective validation required</text>
+  <text x="100" y="955" fill="#68877b" font-family="monospace" font-size="18">FRAMEWORK PROPOSAL AND EMPIRICAL CASE STUDIES · 22 PAGES</text>
+</svg>

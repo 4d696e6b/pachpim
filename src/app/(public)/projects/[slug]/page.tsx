@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowUpRight, Code2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Code2, FileDown } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -16,6 +16,7 @@ import { siteConfig } from "@/config/site";
 import { ProjectCard } from "@/features/projects/project-card";
 import { getPublicContent } from "@/lib/server/public-content";
 import { isSafeUrl } from "@/lib/security";
+import { formatDate } from "@/lib/utils";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -69,6 +70,10 @@ export default async function ProjectDetailPage({ params }: Props) {
           description: project.excerpt,
           url: `${siteConfig.url}/projects/${project.slug}`,
           dateModified: project.updatedAt,
+          datePublished: project.publishedAt,
+          author: project.author
+            ? { "@type": "Person", name: project.author }
+            : undefined,
           keywords: project.technologies.join(", "),
         }}
       />
@@ -89,15 +94,31 @@ export default async function ProjectDetailPage({ params }: Props) {
             <p className="text-muted-foreground mt-6 max-w-3xl text-lg leading-8 sm:text-xl">
               {project.excerpt}
             </p>
+            {project.author || project.publishedAt ? (
+              <p className="text-muted-foreground mt-5 text-sm">
+                {[
+                  project.author,
+                  project.publishedAt ? formatDate(project.publishedAt) : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            ) : null}
             <div className="mt-8 flex flex-wrap gap-3">
-              {project.liveUrl && isSafeUrl(project.liveUrl) ? (
+              {project.liveUrl &&
+              isSafeUrl(project.liveUrl, { allowRelative: true }) ? (
                 <Button asChild variant="accent">
                   <a
                     href={project.liveUrl}
                     rel="noreferrer noopener"
                     target="_blank"
                   >
-                    Visit website <ArrowUpRight className="size-4" />
+                    {project.liveLabel ?? "Visit website"}{" "}
+                    {project.liveLabel ? (
+                      <FileDown className="size-4" />
+                    ) : (
+                      <ArrowUpRight className="size-4" />
+                    )}
                   </a>
                 </Button>
               ) : null}

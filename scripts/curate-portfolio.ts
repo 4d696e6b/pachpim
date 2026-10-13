@@ -8,28 +8,29 @@ const projects = [
     slug: "reposetup-development-stack-cli",
     title: "RepoSetup — development stack CLI",
     excerpt:
-      "A terminal-first stack composer and installer with compatibility checks, setup plans, and recovery guidance.",
+      "An open-source development stack CLI and companion website for choosing tools, previewing plans, and creating projects with safer, explainable workflows.",
     description:
-      "RepoSetup turns a declarative configuration into a typed installation plan. Published on npm as rsetup, it brings stack composition, compatibility checks, and setup tooling into a terminal workflow.\n\nVersion 0.2.3 improves generated-project reliability, database setup guidance, npm recovery diagnostics, and live acceptance coverage while documenting the integrations and environments that remain outside its qualification boundary.",
+      "RepoSetup combines a terminal-first stack composer with a companion website at reposetupcli.com. Published on npm as rsetup, it helps developers understand integration choices, build versioned selections, inspect local installation plans, and create projects through bounded workflows.\n\nVersion 0.3.1 preserves the 0.3 beginner guide, qualified starters, declarative create/add selections, structural diff previews, and config-aware doctor workflow while fixing repeated no-op removal in JSON mode and keeping the website aligned with the published CLI artifact.",
     category: "Developer tooling",
     year: 2026,
-    statusLabel: "Public release · v0.2.3",
+    statusLabel: "Website + npm release · v0.3.1",
     technologies: ["TypeScript", "Node.js", "Commander", "Vitest", "pnpm"],
-    coverImageUrl: "/projects/reposetup.svg",
+    coverImageUrl: "/projects/reposetup.svg?v=0.3.1",
     gallery: [],
-    liveUrl: "https://www.npmjs.com/package/rsetup",
+    liveUrl: "https://reposetupcli.com/",
     repositoryUrl: "https://github.com/4d696e6b/RepoSetup",
     challenge:
-      "Setting up a development stack involves reconciling instructions, compatibility requirements, and installation order across multiple tools. A setup assistant also needs to make its proposed changes understandable before executing them.",
+      "Setting up a development stack means reconciling unfamiliar tools, compatibility requirements, installation order, and local project state. Beginners need explanations before choosing, while experienced users need deterministic, inspectable plans that do not hide file changes or silently repair dependencies.",
     approach:
-      "Separate configuration, integration resolution, planning, and execution. A local registry describes supported tools, while typed operations provide an inspectable boundary between deciding what should happen and modifying a project.",
+      "Keep configuration, registry resolution, planning, and execution separate. Derive beginner explanations and website choices from the same integration registry, transport selections through a versioned non-executable format, preview structural file changes without exposing secret contents, and require review before eligible repair or execution.",
     process:
-      "Build a TypeScript workspace with separate core, registry, integration, and CLI packages. Provide interactive and configuration-driven workflows, existing-project detection, and health checks. Use the same planner for dry runs and execution, then document which integration recipes have been verified.",
+      "Build the CLI as a TypeScript workspace with shared core, registry, integration, and command packages, then qualify the packed artifact across Ubuntu, macOS, and Windows. Test the companion website across five browser profiles, verify deployed public files and security headers, and keep integration maturity and deferred native screen-reader limits explicit.",
     outcome:
-      "Released rsetup 0.2.3 on npm with create, add, remove, search, stack, doctor, and export workflows. The release adds stronger generated-project checks for Prisma, Drizzle, SQLAlchemy, and Mongoose, clearer PostgreSQL and Docker guidance, and bounded, redacted recovery diagnostics. Integration maturity remains documented rather than overstated.",
+      "Published rsetup 0.3.1 and launched reposetupcli.com with documentation, an integration catalog, beginner guidance, and a local selection builder. The release retained three consecutive successful qualification waves with all 48 required jobs passing; published-mode website qualification passed 405 cases. Version 0.3.1 also fixes JSON output for repeated no-op removal while preserving files and avoiding prompts or installation commands.",
     metrics: [
       { label: "Distribution", value: "npm · rsetup" },
-      { label: "Release", value: "0.2.3" },
+      { label: "Release", value: "0.3.1" },
+      { label: "Website", value: "reposetupcli.com" },
       { label: "License", value: "MIT" },
     ],
     featured: true,
@@ -37,8 +38,8 @@ const projects = [
     sources: [
       "https://github.com/4d696e6b/RepoSetup",
       "https://www.npmjs.com/package/rsetup",
-      "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.3",
-      "https://github.com/4d696e6b/RepoSetup/blob/main/docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md",
+      "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.3.1",
+      "https://reposetupcli.com/",
     ],
   },
   {

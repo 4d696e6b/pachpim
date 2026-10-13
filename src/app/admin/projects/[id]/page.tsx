@@ -33,6 +33,8 @@ export default async function EditProjectPage({
     coverImageUrl: String(data.coverImageUrl ?? ""),
     gallery: Array.isArray(data.gallery) ? data.gallery.join("\n") : "",
     liveUrl: String(data.liveUrl ?? ""),
+    supplementaryUrl: String(data.supplementaryUrl ?? ""),
+    supplementaryLabel: String(data.supplementaryLabel ?? ""),
     repositoryUrl: String(data.repositoryUrl ?? ""),
     challenge: String(data.challenge ?? ""),
     approach: String(data.approach ?? ""),

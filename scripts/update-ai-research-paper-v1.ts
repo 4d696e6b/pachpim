@@ -7,6 +7,8 @@ const oldPdfUrl =
   "/research/measuring-ai-performance-quality-cost-constraints.pdf";
 const pdfUrl = `${oldPdfUrl}?v=1.0.0`;
 const coverImageUrl = "/projects/ai-quality-cost-research.svg?v=1.0.0";
+const companionUrl =
+  "/research/ai-evaluation-model-selection-equations-explanations.pdf?v=1.0.0";
 
 async function main() {
   const { getAdminFirestore } =
@@ -34,13 +36,16 @@ async function main() {
     tx.update(projectRef, {
       coverImageUrl,
       liveUrl: pdfUrl,
+      supplementaryUrl: companionUrl,
+      supplementaryLabel: "Equation explanations",
       metrics: [
         { label: "Author", value: "Pacharapol Pimpa" },
         { label: "Published", value: "11 Oct 2026" },
         { label: "Length", value: "24 pages" },
+        { label: "Equation guide", value: "22 pages" },
         { label: "Research version", value: "1.0.0" },
       ],
-      sources: [pdfUrl],
+      sources: [pdfUrl, companionUrl],
       updatedAt,
       updatedBy: "script:update-ai-research-paper-v1",
     });

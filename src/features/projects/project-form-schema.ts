@@ -35,6 +35,8 @@ export const projectFormSchema = z.object({
   coverImageUrl: optionalAssetUrl,
   gallery: z.string().max(4000),
   liveUrl: optionalUrl,
+  supplementaryUrl: optionalUrl,
+  supplementaryLabel: z.string().trim().max(80),
   repositoryUrl: optionalUrl,
   challenge: z.string().trim().min(10).max(4000),
   approach: z.string().trim().min(10).max(4000),

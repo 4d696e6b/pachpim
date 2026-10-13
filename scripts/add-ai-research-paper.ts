@@ -27,6 +27,9 @@ const project = {
   liveUrl:
     "/research/measuring-ai-performance-quality-cost-constraints.pdf?v=1.0.0",
   liveLabel: "Read paper / Download PDF",
+  supplementaryUrl:
+    "/research/ai-evaluation-model-selection-equations-explanations.pdf?v=1.0.0",
+  supplementaryLabel: "Equation explanations",
   repositoryUrl: null,
   author: "Pacharapol Pimpa",
   publishedAt: Timestamp.fromDate(new Date("2026-10-11T05:00:00.000Z")),
@@ -42,12 +45,14 @@ const project = {
     { label: "Author", value: "Pacharapol Pimpa" },
     { label: "Published", value: "11 Oct 2026" },
     { label: "Length", value: "24 pages" },
+    { label: "Equation guide", value: "22 pages" },
     { label: "Research version", value: "1.0.0" },
   ],
   featured: true,
   sortOrder: 0,
   sources: [
     "/research/measuring-ai-performance-quality-cost-constraints.pdf?v=1.0.0",
+    "/research/ai-evaluation-model-selection-equations-explanations.pdf?v=1.0.0",
   ],
 };
 
@@ -94,7 +99,7 @@ The paper therefore specifies a separate prospective study using Python code-gen
 
 This distinction matters to me. A research page should make completed evidence easy to inspect while keeping future validation clearly labeled.
 
-[Explore the research project](/projects/measuring-ai-performance-quality-cost-constraints) · [Read the full paper](/research/measuring-ai-performance-quality-cost-constraints.pdf?v=1.0.0)`,
+[Explore the research project](/projects/measuring-ai-performance-quality-cost-constraints) · [Read the full paper](/research/measuring-ai-performance-quality-cost-constraints.pdf?v=1.0.0) · [Read the equation explanations](/research/ai-evaluation-model-selection-equations-explanations.pdf?v=1.0.0)`,
 };
 
 async function main() {
@@ -152,6 +157,7 @@ async function main() {
       readingTime,
       sources: [
         "/research/measuring-ai-performance-quality-cost-constraints.pdf?v=1.0.0",
+        "/research/ai-evaluation-model-selection-equations-explanations.pdf?v=1.0.0",
       ],
       ...audit,
     });

@@ -83,6 +83,8 @@ export async function saveProject(
           metrics: parseMetrics(values.metrics),
           coverImageUrl: values.coverImageUrl || null,
           liveUrl: values.liveUrl || null,
+          supplementaryUrl: values.supplementaryUrl || null,
+          supplementaryLabel: values.supplementaryLabel || null,
           repositoryUrl: values.repositoryUrl || null,
           createdBy: current.exists ? current.get("createdBy") : admin.uid,
           createdAt: current.exists ? current.get("createdAt") : now,

@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowUpRight, Code2, FileDown } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  BookOpenText,
+  Code2,
+  FileDown,
+} from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -130,6 +136,19 @@ export default async function ProjectDetailPage({ params }: Props) {
                     target="_blank"
                   >
                     <Code2 className="size-4" /> Source repository
+                  </a>
+                </Button>
+              ) : null}
+              {project.supplementaryUrl &&
+              isSafeUrl(project.supplementaryUrl, { allowRelative: true }) ? (
+                <Button asChild variant="outline">
+                  <a
+                    href={project.supplementaryUrl}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
+                    <BookOpenText className="size-4" />
+                    {project.supplementaryLabel ?? "Supporting resource"}
                   </a>
                 </Button>
               ) : null}

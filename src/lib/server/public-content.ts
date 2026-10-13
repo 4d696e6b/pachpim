@@ -28,6 +28,8 @@ export interface PublicProject {
   metrics: { label: string; value: string }[];
   liveUrl?: string;
   liveLabel?: string;
+  supplementaryUrl?: string;
+  supplementaryLabel?: string;
   repositoryUrl?: string;
   author?: string;
   publishedAt?: string;
@@ -407,6 +409,12 @@ function normalizeProject(
     metrics: asMetrics(data.metrics),
     liveUrl: data.liveUrl ? String(data.liveUrl) : undefined,
     liveLabel: data.liveLabel ? String(data.liveLabel) : undefined,
+    supplementaryUrl: data.supplementaryUrl
+      ? String(data.supplementaryUrl)
+      : undefined,
+    supplementaryLabel: data.supplementaryLabel
+      ? String(data.supplementaryLabel)
+      : undefined,
     repositoryUrl: data.repositoryUrl ? String(data.repositoryUrl) : undefined,
     author: data.author ? String(data.author) : undefined,
     publishedAt: data.publishedAt ? asIso(data.publishedAt) : undefined,

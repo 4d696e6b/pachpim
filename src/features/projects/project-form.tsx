@@ -47,6 +47,8 @@ const defaults: ProjectFormValues = {
   coverImageUrl: "",
   gallery: "",
   liveUrl: "",
+  supplementaryUrl: "",
+  supplementaryLabel: "",
   repositoryUrl: "",
   challenge: "",
   approach: "",
@@ -289,6 +291,16 @@ export function ProjectForm({
                 <ProjectField
                   label="Source repository URL"
                   name="repositoryUrl"
+                />
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <ProjectField
+                  label="Supplementary resource URL"
+                  name="supplementaryUrl"
+                />
+                <ProjectField
+                  label="Supplementary resource label"
+                  name="supplementaryLabel"
                 />
               </div>
             </section>

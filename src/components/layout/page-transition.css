@@ -1,0 +1,105 @@
+.page-transition-content {
+  min-width: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.page-transition-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  overflow: clip;
+  cursor: progress;
+}
+.page-transition-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.page-transition-layer[data-phase="waiting"] .page-transition-veil {
+  background: var(--background);
+}
+.page-transition-piece {
+  position: absolute;
+  pointer-events: none;
+}
+.page-transition-frame {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--designer-color);
+  transform-origin: top left;
+  box-shadow: 0 0 16px
+    color-mix(in srgb, var(--designer-color) 12%, transparent);
+}
+.page-transition-frame > span {
+  position: absolute;
+  top: -20px;
+  left: -1px;
+  padding: 3px 6px;
+  background: var(--designer-color);
+  color: var(--accent-foreground);
+  font:
+    9px/1.5 var(--font-geist-mono),
+    monospace;
+  border-radius: 3px 3px 0 0;
+}
+.page-transition-frame i {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: var(--background);
+  border: 1px solid var(--designer-color);
+}
+.page-transition-frame i:nth-of-type(1) {
+  left: -3px;
+  top: -3px;
+}
+.page-transition-frame i:nth-of-type(2) {
+  right: -3px;
+  top: -3px;
+}
+.page-transition-frame i:nth-of-type(3) {
+  right: -3px;
+  bottom: -3px;
+}
+.page-transition-frame i:nth-of-type(4) {
+  left: -3px;
+  bottom: -3px;
+}
+.page-transition-cursor {
+  position: absolute;
+  inset: 0;
+}
+.page-transition-caption {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--accent);
+  border-radius: 5px;
+  font:
+    9px/1.5 var(--font-geist-mono),
+    monospace;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px #0001;
+  pointer-events: none;
+}
+.page-transition-caption > span {
+  color: var(--muted-foreground);
+}
+@media (max-width: 767px) {
+  .page-transition-piece:nth-of-type(n + 3) .page-transition-cursor {
+    display: none;
+  }
+  .page-transition-caption > span {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-layer {
+    display: none;
+  }
+}

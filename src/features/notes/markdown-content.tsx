@@ -3,6 +3,8 @@ import remarkGfm from "remark-gfm";
 
 import { CmsImage } from "@/components/shared/cms-image";
 import { ImageLightbox } from "@/components/shared/image-lightbox";
+import TransitionLink from "@/components/shared/transition-link";
+import { DesignReveal } from "@/components/home/design-reveal";
 import { isImageAssetUrl } from "@/lib/media";
 import { isSafeUrl } from "@/lib/security";
 import { slugify } from "@/lib/utils";
@@ -36,7 +38,13 @@ export function getTableOfContents(body: string) {
     }));
 }
 
-export function MarkdownContent({ body }: { body: string }) {
+export function MarkdownContent({
+  body,
+  animateBlocks = false,
+}: {
+  body: string;
+  animateBlocks?: boolean;
+}) {
   return (
     <div className="prose-custom">
       <ReactMarkdown
@@ -63,22 +71,52 @@ export function MarkdownContent({ body }: { body: string }) {
           "img",
         ]}
         components={{
-          h2: ({ children }) => (
-            <h2 id={slugify(String(children))}>{children}</h2>
-          ),
-          h3: ({ children }) => (
-            <h3 id={slugify(String(children))}>{children}</h3>
-          ),
-          a: ({ href = "", children }) => (
-            <a
-              className="text-accent font-medium underline underline-offset-4"
-              href={safeUrl(href)}
-              rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-              target={href.startsWith("http") ? "_blank" : undefined}
-            >
-              {children}
-            </a>
-          ),
+          h2: ({ children }) =>
+            animateBlocks ? (
+              <DesignReveal label="Section heading">
+                <h2 id={slugify(String(children))}>{children}</h2>
+              </DesignReveal>
+            ) : (
+              <h2 id={slugify(String(children))}>{children}</h2>
+            ),
+          h3: ({ children }) =>
+            animateBlocks ? (
+              <DesignReveal label="Subheading">
+                <h3 id={slugify(String(children))}>{children}</h3>
+              </DesignReveal>
+            ) : (
+              <h3 id={slugify(String(children))}>{children}</h3>
+            ),
+          p: ({ children }) =>
+            animateBlocks ? (
+              <DesignReveal label="Paragraph">
+                <p>{children}</p>
+              </DesignReveal>
+            ) : (
+              <p>{children}</p>
+            ),
+          a: ({ href = "", children }) =>
+            href.startsWith("/") &&
+            !href.startsWith("//") &&
+            !/\.[a-z0-9]+(?:[?#]|$)/i.test(href) ? (
+              <TransitionLink
+                className="text-accent font-medium underline underline-offset-4"
+                href={safeUrl(href)}
+              >
+                {children}
+              </TransitionLink>
+            ) : (
+              <a
+                className="text-accent font-medium underline underline-offset-4"
+                href={safeUrl(href)}
+                rel={
+                  href.startsWith("http") ? "noreferrer noopener" : undefined
+                }
+                target={href.startsWith("http") ? "_blank" : undefined}
+              >
+                {children}
+              </a>
+            ),
           img: ({ src = "", alt = "" }) => {
             const url = safeImageUrl(String(src));
             if (!url) return null;

@@ -1,20 +1,28 @@
 import { ArrowDownToLine, ArrowRight, Award, Mail, MapPin } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/shared/transition-link";
 
+import {
+  DesignSectionHeading as SectionHeading,
+  DesignSkills as SkillHolders,
+} from "@/components/home/design-content";
+import {
+  DesignMotion,
+  DesignGroup as Stagger,
+  DesignReveal as Reveal,
+  DesignReveal as StaggerItem,
+} from "@/components/home/design-reveal";
 import { JsonLd } from "@/components/shared/json-ld";
-import { Stagger, StaggerItem } from "@/components/shared/motion";
-import { Reveal } from "@/components/shared/reveal";
 import { ProfileFlipCard } from "@/components/shared/profile-flip-card";
-import { SectionHeading } from "@/components/shared/section-heading";
 import { TechRail } from "@/components/shared/tech-rail";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { SkillHolders } from "@/components/shared/skill-holders";
 import { siteConfig } from "@/config/site";
 import { ProjectCard } from "@/features/projects/project-card";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
 import { isSafeUrl } from "@/lib/security";
 import { formatDate } from "@/lib/utils";
+
+import "./collaboration.css";
 
 export default async function HomePage() {
   const { profile, projects, notes, skills, timeline, achievements } =
@@ -34,7 +42,7 @@ export default async function HomePage() {
       : null;
 
   return (
-    <>
+    <DesignMotion>
       <JsonLd
         data={[
           {
@@ -55,18 +63,18 @@ export default async function HomePage() {
       />
       <section className="container grid min-h-[calc(100vh-4.5rem)] items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.15fr_.85fr]">
         <Stagger className="relative" delay={0.05}>
-          <StaggerItem>
+          <StaggerItem label="Availability">
             <p className="eyebrow flex items-center gap-2">
               <span className="availability-dot bg-accent size-2 rounded-full" />
               {profile.availability}
             </p>
           </StaggerItem>
-          <StaggerItem>
+          <StaggerItem label="Typography">
             <h1 className="display mt-6 max-w-3xl text-balance">
               I build practical web products and real-time systems.
             </h1>
           </StaggerItem>
-          <StaggerItem>
+          <StaggerItem label="Identity">
             <p className="mt-6 font-medium">
               {identity.name}
               {profile.professionalTitle
@@ -74,12 +82,12 @@ export default async function HomePage() {
                 : null}
             </p>
           </StaggerItem>
-          <StaggerItem>
+          <StaggerItem label="Introduction">
             <p className="text-muted-foreground mt-7 max-w-2xl text-lg leading-8 sm:text-xl">
               {profile.shortIntroduction}
             </p>
           </StaggerItem>
-          <StaggerItem>
+          <StaggerItem label="Actions">
             <div className="mt-9 flex flex-wrap gap-3">
               <Button asChild size="lg" variant="accent">
                 <Link href="/projects">
@@ -100,7 +108,7 @@ export default async function HomePage() {
               ) : null}
             </div>
           </StaggerItem>
-          <StaggerItem>
+          <StaggerItem label="Location">
             <p className="text-muted-foreground mt-8 flex items-center gap-2 text-sm">
               <MapPin className="size-4" /> {profile.location}
             </p>
@@ -110,6 +118,7 @@ export default async function HomePage() {
           className="relative mx-auto w-full max-w-md"
           delay={0.18}
           direction="right"
+          label="Portrait"
         >
           <div className="portrait-frame bg-muted relative aspect-[4/5] overflow-hidden rounded-2xl border">
             <ProfileFlipCard
@@ -144,7 +153,11 @@ export default async function HomePage() {
                 ? selectedProjects
                 : projects.slice(0, 2)
               ).map((project, index) => (
-                <Reveal delay={index * 0.08} key={project.id}>
+                <Reveal
+                  delay={index * 0.08}
+                  key={project.id}
+                  label="Project card"
+                >
                   <ProjectCard
                     featured={selectedProjects.length === 1}
                     priority={index === 0}
@@ -179,7 +192,7 @@ export default async function HomePage() {
               <p className="eyebrow">Experience</p>
               <div className="mt-7 border-l">
                 {experiencePreview.map((item, index) => (
-                  <Reveal delay={index * 0.08} key={item.id}>
+                  <Reveal delay={index * 0.08} key={item.id} label="Experience">
                     <div className="timeline-item relative pb-8 pl-7 last:pb-0">
                       <span className="timeline-dot border-background bg-accent absolute top-1.5 -left-1.5 size-3 rounded-full border-2" />
                       <p className="text-accent text-xs font-medium">
@@ -211,7 +224,7 @@ export default async function HomePage() {
             <SectionHeading eyebrow="Achievements" title="Highlights" />
             <div className="grid gap-4 sm:grid-cols-2">
               {achievements.slice(0, 4).map((item, index) => (
-                <Reveal delay={index * 0.08} key={item.id}>
+                <Reveal delay={index * 0.08} key={item.id} label="Achievement">
                   <Card className="achievement-card h-full">
                     <CardContent className="pt-6">
                       <Award className="achievement-icon text-accent size-5 transition-transform duration-300" />
@@ -233,7 +246,7 @@ export default async function HomePage() {
           <SectionHeading eyebrow="Latest updates" title="Experience" />
           <div className="mt-10 divide-y border-y">
             {notes.slice(0, 2).map((note, index) => (
-              <Reveal delay={index * 0.08} key={note.id}>
+              <Reveal delay={index * 0.08} key={note.id} label="Journal entry">
                 <Link
                   className="note-row group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center"
                   href={`/experience/${note.slug}`}
@@ -257,7 +270,7 @@ export default async function HomePage() {
       ) : null}
 
       <section className="container pb-20 sm:pb-32">
-        <Reveal>
+        <Reveal label="Contact panel">
           <div className="cta-panel bg-foreground text-background relative isolate overflow-hidden rounded-2xl p-8 sm:p-14">
             {profile.availability ? (
               <p className="text-accent text-sm font-semibold">
@@ -280,6 +293,6 @@ export default async function HomePage() {
           </div>
         </Reveal>
       </section>
-    </>
+    </DesignMotion>
   );
 }

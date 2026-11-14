@@ -13,8 +13,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { DesignReveal } from "@/components/home/design-reveal";
 
 export function AmbientMotion() {
   const reduceMotion = useReducedMotion();
@@ -68,32 +67,13 @@ export function ScrollProgress() {
 export function Stagger({
   children,
   className,
-  delay = 0,
-  once = true,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
   once?: boolean;
 }) {
-  const reduceMotion = useReducedMotion();
-
-  return (
-    <motion.div
-      className={className}
-      initial={reduceMotion ? false : "hidden"}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: { delayChildren: delay, staggerChildren: 0.09 },
-        },
-      }}
-      viewport={{ once, margin: "-60px" }}
-      whileInView={reduceMotion ? undefined : "visible"}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 export function StaggerItem({
@@ -103,26 +83,10 @@ export function StaggerItem({
   children: React.ReactNode;
   className?: string;
 }) {
-  const reduceMotion = useReducedMotion();
-
   return (
-    <motion.div
-      className={className}
-      variants={
-        reduceMotion
-          ? undefined
-          : {
-              hidden: { opacity: 0, y: 20 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.62, ease },
-              },
-            }
-      }
-    >
+    <DesignReveal className={className} label="Component">
       {children}
-    </motion.div>
+    </DesignReveal>
   );
 }
 
@@ -139,7 +103,7 @@ export function FloatingFrame({
     <motion.div
       animate={reduceMotion ? undefined : { y: [0, -7, 0] }}
       className={cn("will-change-transform", className)}
-      transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
+      transition={{ duration: 11, ease: "easeInOut", repeat: Infinity }}
       whileHover={reduceMotion ? undefined : { scale: 1.015, rotate: 0.25 }}
     >
       {children}
@@ -189,7 +153,7 @@ function FloatingLabel({
       )}
       transition={{
         delay,
-        duration: 4.5,
+        duration: 7.5,
         ease: "easeInOut",
         repeat: Infinity,
       }}

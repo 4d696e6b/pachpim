@@ -16,7 +16,7 @@ export function SiteIntro() {
     const previousOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
 
-    const timer = window.setTimeout(() => setVisible(false), 1550);
+    const timer = window.setTimeout(() => setVisible(false), 2170);
 
     return () => {
       window.clearTimeout(timer);
@@ -27,9 +27,14 @@ export function SiteIntro() {
   if (reduceMotion) return null;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence
+      onExitComplete={() =>
+        window.dispatchEvent(new Event("portfolio:intro-complete"))
+      }
+    >
       {visible ? (
         <motion.div
+          data-site-intro
           aria-hidden="true"
           className="bg-background fixed inset-0 z-[100] grid place-items-center overflow-hidden px-5"
           exit={{
@@ -40,13 +45,13 @@ export function SiteIntro() {
             maskImage:
               "radial-gradient(circle at center, transparent 0%, black 0%)",
           }}
-          transition={{ duration: 0.5, ease }}
+          transition={{ duration: 0.7, ease }}
         >
           <motion.div
             animate={{ opacity: 1, scale: 1, y: 0 }}
             className="border-border bg-card relative w-full max-w-[24rem] overflow-hidden rounded-2xl border shadow-[0_24px_100px_rgba(0,0,0,0.35)]"
             initial={{ opacity: 0, scale: 0.94, y: 12 }}
-            transition={{ duration: 0.3, ease }}
+            transition={{ duration: 0.42, ease }}
           >
             <div className="border-border bg-muted/45 flex h-10 items-center justify-between border-b px-4">
               <div className="flex items-center gap-1.5">
@@ -71,8 +76,8 @@ export function SiteIntro() {
                     className="block overflow-hidden whitespace-nowrap"
                     initial={{ width: 0 }}
                     transition={{
-                      delay: 0.18,
-                      duration: 0.65,
+                      delay: 0.252,
+                      duration: 0.91,
                       ease: "linear",
                     }}
                   >
@@ -82,7 +87,7 @@ export function SiteIntro() {
                     animate={{ opacity: [1, 1, 0, 0, 1] }}
                     className="bg-accent ml-0.5 inline-block h-5 w-px"
                     transition={{
-                      duration: 0.55,
+                      duration: 0.77,
                       repeat: 1,
                       times: [0, 0.45, 0.46, 0.95, 1],
                     }}
@@ -95,7 +100,7 @@ export function SiteIntro() {
                   animate={{ opacity: 1, x: 0 }}
                   className="text-accent flex items-center gap-1.5 font-mono text-[10px]"
                   initial={{ opacity: 0, x: -6 }}
-                  transition={{ delay: 1.28, duration: 0.2 }}
+                  transition={{ delay: 1.792, duration: 0.28 }}
                 >
                   <Check className="size-3" />
                   Profile ready
@@ -107,10 +112,10 @@ export function SiteIntro() {
                   initial={{ opacity: 0 }}
                   tabIndex={-1}
                   transition={{
-                    opacity: { delay: 0.72, duration: 0.18 },
+                    opacity: { delay: 1.008, duration: 0.252 },
                     scale: {
-                      delay: 1.16,
-                      duration: 0.28,
+                      delay: 1.624,
+                      duration: 0.392,
                       times: [0, 0.25, 0.55, 1],
                     },
                   }}
@@ -132,8 +137,8 @@ export function SiteIntro() {
               className="text-foreground pointer-events-none absolute right-8 bottom-5 drop-shadow-lg"
               initial={{ opacity: 0, x: 34, y: 28 }}
               transition={{
-                delay: 0.9,
-                duration: 0.55,
+                delay: 1.26,
+                duration: 0.77,
                 ease,
                 times: [0, 0.42, 0.7, 1],
               }}
@@ -146,7 +151,7 @@ export function SiteIntro() {
             animate={{ opacity: 1, y: 0 }}
             className="text-muted-foreground absolute bottom-8 font-mono text-[9px] tracking-[0.24em] uppercase"
             initial={{ opacity: 0, y: 4 }}
-            transition={{ delay: 0.25, duration: 0.3 }}
+            transition={{ delay: 0.35, duration: 0.42 }}
           >
             Pacharapol Pimpa · Portfolio
           </motion.p>

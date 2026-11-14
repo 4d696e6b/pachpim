@@ -205,28 +205,32 @@ export default async function AboutPage() {
                     </CardContent>
                   </Card>
                 );
-                return imageUrl &&
+                const credential =
+                  imageUrl &&
                   (!credentialUrl || isImageAssetUrl(credentialUrl)) ? (
-                  <ImageLightbox
-                    alt={`${item.title} certificate`}
-                    className="h-full"
-                    key={item.id}
-                    src={imageUrl}
-                  >
-                    {card}
-                  </ImageLightbox>
-                ) : credentialUrl ? (
-                  <a
-                    className="block cursor-pointer transition hover:-translate-y-0.5"
-                    href={credentialUrl}
-                    key={item.id}
-                    rel="noreferrer noopener"
-                    target="_blank"
-                  >
-                    {card}
-                  </a>
-                ) : (
-                  <div key={item.id}>{card}</div>
+                    <ImageLightbox
+                      alt={`${item.title} certificate`}
+                      className="h-full"
+                      src={imageUrl}
+                    >
+                      {card}
+                    </ImageLightbox>
+                  ) : credentialUrl ? (
+                    <a
+                      className="block cursor-pointer transition hover:-translate-y-0.5"
+                      href={credentialUrl}
+                      rel="noreferrer noopener"
+                      target="_blank"
+                    >
+                      {card}
+                    </a>
+                  ) : (
+                    <div>{card}</div>
+                  );
+                return (
+                  <Reveal key={item.id} label={item.title}>
+                    {credential}
+                  </Reveal>
                 );
               })}
             </div>

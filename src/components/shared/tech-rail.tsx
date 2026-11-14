@@ -61,7 +61,7 @@ export function TechRail() {
       return;
     }
 
-    const next = x.get() + direction.current * 0.03 * delta;
+    const next = x.get() + direction.current * 0.018 * delta;
     x.set(wrap(-setWidth * 3, -setWidth * 2, next));
   });
 

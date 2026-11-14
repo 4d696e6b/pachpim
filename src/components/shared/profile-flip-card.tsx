@@ -62,7 +62,7 @@ export function ProfileFlipCard({
         className="relative block size-full will-change-transform"
         style={{ transformStyle: "preserve-3d" }}
         transition={{
-          duration: reduceMotion ? 0.01 : 0.72,
+          duration: reduceMotion ? 0.01 : 1.1,
           ease: [0.16, 1, 0.3, 1],
           times: [0, 0.5, 1],
         }}

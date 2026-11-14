@@ -1,10 +1,11 @@
 "use client";
 
 import { ArrowUpRight, Sparkles, Search } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/shared/transition-link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CmsImage } from "@/components/shared/cms-image";
+import { DesignReveal } from "@/components/home/design-reveal";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Input } from "@/components/ui/form-controls";
 import type { PublicNote } from "@/lib/server/public-content";
@@ -69,63 +70,65 @@ export function NoteBrowser({ notes }: { notes: PublicNote[] }) {
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
                   exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
-                  initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                  initial={false}
                   key={note.id}
                   layout={!reduceMotion}
                   transition={{
-                    duration: reduceMotion ? 0 : 0.32,
+                    duration: reduceMotion ? 0 : 0.55,
                     ease: [0.22, 1, 0.36, 1],
                   }}
                 >
-                  <article className="journal-card group">
-                    <Link
-                      href={`/experience/${note.slug}`}
-                      className="bg-card hover:border-accent/40 block overflow-hidden rounded-2xl border transition"
-                    >
-                      <div className="p-6 sm:p-8">
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                          <span className="text-accent bg-accent/10 rounded-full px-3 py-1 text-xs font-medium">
-                            {note.category}
-                          </span>
-                          <time
-                            dateTime={note.publishedAt}
-                            className="text-muted-foreground font-mono text-xs"
-                          >
-                            {formatDate(note.publishedAt)}
-                          </time>
-                        </div>
-                        <h2 className="group-hover:text-accent mt-5 text-2xl font-semibold tracking-tight transition">
-                          {note.title}
-                        </h2>
-                        <p className="text-muted-foreground mt-3 leading-7">
-                          {note.excerpt}
-                        </p>
-                        {note.coverImageUrl && (
-                          <div className="bg-muted relative mt-6 aspect-video overflow-hidden rounded-xl">
-                            <CmsImage
-                              src={note.coverImageUrl}
-                              alt={note.title}
-                              fill
-                              className="object-contain transition duration-500 group-hover:scale-[1.02]"
-                              sizes="(min-width: 768px) 700px, 90vw"
-                            />
+                  <DesignReveal label="Experience post">
+                    <article className="journal-card group">
+                      <Link
+                        href={`/experience/${note.slug}`}
+                        className="bg-card hover:border-accent/40 block overflow-hidden rounded-2xl border transition"
+                      >
+                        <div className="p-6 sm:p-8">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <span className="text-accent bg-accent/10 rounded-full px-3 py-1 text-xs font-medium">
+                              {note.category}
+                            </span>
+                            <time
+                              dateTime={note.publishedAt}
+                              className="text-muted-foreground font-mono text-xs"
+                            >
+                              {formatDate(note.publishedAt)}
+                            </time>
                           </div>
-                        )}
-                        <div className="text-muted-foreground mt-6 flex items-center justify-between gap-4 text-xs">
-                          <span>
-                            {note.tags
-                              .slice(0, 3)
-                              .map((tag) => `#${tag}`)
-                              .join("  ")}
-                          </span>
-                          <span className="text-accent flex shrink-0 items-center gap-2">
-                            Read update{" "}
-                            <ArrowUpRight className="size-4 transition group-hover:translate-x-1" />
-                          </span>
+                          <h2 className="group-hover:text-accent mt-5 text-2xl font-semibold tracking-tight transition">
+                            {note.title}
+                          </h2>
+                          <p className="text-muted-foreground mt-3 leading-7">
+                            {note.excerpt}
+                          </p>
+                          {note.coverImageUrl && (
+                            <div className="bg-muted relative mt-6 aspect-video overflow-hidden rounded-xl">
+                              <CmsImage
+                                src={note.coverImageUrl}
+                                alt={note.title}
+                                fill
+                                className="object-contain transition duration-500 group-hover:scale-[1.02]"
+                                sizes="(min-width: 768px) 700px, 90vw"
+                              />
+                            </div>
+                          )}
+                          <div className="text-muted-foreground mt-6 flex items-center justify-between gap-4 text-xs">
+                            <span>
+                              {note.tags
+                                .slice(0, 3)
+                                .map((tag) => `#${tag}`)
+                                .join("  ")}
+                            </span>
+                            <span className="text-accent flex shrink-0 items-center gap-2">
+                              Read update{" "}
+                              <ArrowUpRight className="size-4 transition group-hover:translate-x-1" />
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  </article>
+                      </Link>
+                    </article>
+                  </DesignReveal>
                 </motion.div>
               ))}
             </AnimatePresence>

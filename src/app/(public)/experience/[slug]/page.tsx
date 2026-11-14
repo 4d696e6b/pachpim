@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/shared/transition-link";
 import { notFound } from "next/navigation";
 
 import { CmsImage } from "@/components/shared/cms-image";
@@ -114,9 +114,7 @@ export default async function NoteDetailPage({ params }: Props) {
           </Reveal>
         ) : null}
         <div className="mx-auto mt-10 max-w-3xl border-t pt-8">
-          <Reveal>
-            <MarkdownContent body={note.body} />
-          </Reveal>
+          <MarkdownContent animateBlocks body={note.body} />
         </div>
       </article>
       {related.length ? (
@@ -125,16 +123,17 @@ export default async function NoteDetailPage({ params }: Props) {
             <p className="eyebrow">More experiences</p>
             <div className="mt-7 grid gap-5 md:grid-cols-2">
               {related.map((item) => (
-                <Link
-                  className="related-note bg-card hover:border-accent/35 rounded-3xl border p-6 transition duration-300"
-                  href={`/experience/${item.slug}`}
-                  key={item.id}
-                >
-                  <h2 className="text-xl font-semibold">{item.title}</h2>
-                  <p className="text-muted-foreground mt-3 text-sm leading-6">
-                    {item.excerpt}
-                  </p>
-                </Link>
+                <Reveal key={item.id} label="Related experience">
+                  <Link
+                    className="related-note bg-card hover:border-accent/35 rounded-3xl border p-6 transition duration-300"
+                    href={`/experience/${item.slug}`}
+                  >
+                    <h2 className="text-xl font-semibold">{item.title}</h2>
+                    <p className="text-muted-foreground mt-3 text-sm leading-6">
+                      {item.excerpt}
+                    </p>
+                  </Link>
+                </Reveal>
               ))}
             </div>
           </div>

@@ -4,7 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { motion } from "framer-motion";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
-import Link from "next/link";
+import Link from "@/components/shared/transition-link";
 import { usePathname } from "next/navigation";
 import { useState, type CSSProperties } from "react";
 
@@ -41,7 +41,7 @@ export function SiteHeader({ name }: { name: string }) {
     <motion.header
       animate={{ y: hidden && !open ? "-100%" : 0 }}
       className="site-header border-border/60 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-xl"
-      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="container flex h-18 items-center justify-between">
         <Link
@@ -73,7 +73,7 @@ export function SiteHeader({ name }: { name: string }) {
                   <motion.span
                     className="bg-muted absolute inset-0 -z-10 rounded-full"
                     layoutId="active-navigation"
-                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                    transition={{ type: "spring", stiffness: 240, damping: 30 }}
                   />
                 ) : null}
                 {item.label}

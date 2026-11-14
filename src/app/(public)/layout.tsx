@@ -1,8 +1,12 @@
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteIntro } from "@/components/layout/site-intro";
+import { PageTransition } from "@/components/layout/page-transition";
 import { AmbientMotion, ScrollProgress } from "@/components/shared/motion";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
+
+import "./collaboration.css";
+import "@/components/layout/page-transition.css";
 
 export default async function PublicLayout({
   children,
@@ -18,14 +22,16 @@ export default async function PublicLayout({
       <ScrollProgress />
       <div className="public-shell flex min-h-screen flex-col">
         <AmbientMotion />
-        <SiteHeader name={identity.name} />
-        <main className="flex-1">{children}</main>
-        <SiteFooter
-          latestUpdate={profile.latestUpdate}
-          name={identity.name}
-          socialLinks={profile.socialLinks}
-          tagline={profile.professionalTitle}
-        />
+        <PageTransition>
+          <SiteHeader name={identity.name} />
+          <main className="flex-1">{children}</main>
+          <SiteFooter
+            latestUpdate={profile.latestUpdate}
+            name={identity.name}
+            socialLinks={profile.socialLinks}
+            tagline={profile.professionalTitle}
+          />
+        </PageTransition>
       </div>
     </>
   );

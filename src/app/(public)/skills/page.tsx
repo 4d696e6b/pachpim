@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/shared/transition-link";
 
 import { SkillHolders } from "@/components/shared/skill-holders";
+import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
 import { getPublicContent, siteIdentity } from "@/lib/server/public-content";
 
@@ -25,12 +26,14 @@ export default async function SkillsPage() {
           <ArrowLeft className="size-4" /> Home
         </Link>
       </Button>
-      <p className="eyebrow mt-8">Skills</p>
-      <h1 className="page-title mt-6 max-w-4xl">Tools and capabilities</h1>
-      <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
-        The technologies, systems, and collaborative skills I use to take a
-        product from an idea to a reliable release.
-      </p>
+      <Reveal label="Skills overview">
+        <p className="eyebrow mt-8">Skills</p>
+        <h1 className="page-title mt-6 max-w-4xl">Tools and capabilities</h1>
+        <p className="text-muted-foreground mt-6 max-w-2xl text-lg leading-8">
+          The technologies, systems, and collaborative skills I use to take a
+          product from an idea to a reliable release.
+        </p>
+      </Reveal>
       <div className="mt-12 max-w-4xl">
         {skills.length ? (
           <SkillHolders skills={skills} />

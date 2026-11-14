@@ -6,7 +6,7 @@ import {
   Code2,
   FileDown,
 } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/shared/transition-link";
 import { notFound } from "next/navigation";
 
 import { ProjectGallery } from "@/components/shared/project-gallery";
@@ -246,7 +246,9 @@ export default async function ProjectDetailPage({ params }: Props) {
             <SectionHeading eyebrow="Keep exploring" title="Related projects" />
             <div className="mt-10 grid gap-6 md:grid-cols-2">
               {related.map((item) => (
-                <ProjectCard key={item.id} project={item} />
+                <Reveal key={item.id} label="Related project">
+                  <ProjectCard key={item.id} project={item} />
+                </Reveal>
               ))}
             </div>
           </div>

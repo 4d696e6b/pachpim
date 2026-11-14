@@ -1,5 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/shared/transition-link";
 
 import { CmsImage } from "@/components/shared/cms-image";
 import { Badge } from "@/components/ui/form-controls";

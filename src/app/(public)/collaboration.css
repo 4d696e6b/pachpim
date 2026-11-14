@@ -1,0 +1,203 @@
+/* Scroll assembly effects only; the settled page retains its original design. */
+.public-shell {
+  overflow-x: clip;
+  --design-layout-color: var(--accent);
+  --design-style-color: color-mix(
+    in srgb,
+    var(--accent) 90%,
+    var(--foreground)
+  );
+  --design-polish-color: color-mix(
+    in srgb,
+    var(--accent) 75%,
+    var(--foreground)
+  );
+}
+.design-page {
+  overflow: clip;
+}
+.design-reveal {
+  position: relative;
+  min-width: 0;
+}
+.design-reveal-content {
+  display: flow-root;
+  transform-origin: top left;
+}
+.design-build-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  user-select: none;
+}
+.design-build-frame,
+.design-build-selection {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--accent);
+  transform-origin: top left;
+}
+.design-build-frame {
+  background: color-mix(in srgb, var(--accent) 3%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 7%, transparent);
+}
+.design-wireframe {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+}
+.design-wireframe svg {
+  width: 100%;
+  height: 100%;
+  stroke: color-mix(in srgb, var(--accent) 27%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+.design-frame-label {
+  position: absolute;
+  left: -1px;
+  top: -22px;
+  padding: 4px 7px;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+  color: var(--accent-foreground);
+  font:
+    9px/1.5 var(--font-geist-mono),
+    monospace;
+  white-space: nowrap;
+}
+.design-frame-label > span {
+  opacity: 0.75;
+}
+.design-build-selection > i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--accent);
+  background: var(--background);
+}
+.design-build-selection > i:nth-of-type(1) {
+  top: -3px;
+  left: -3px;
+}
+.design-build-selection > i:nth-of-type(2) {
+  top: -3px;
+  right: -3px;
+}
+.design-build-selection > i:nth-of-type(3) {
+  bottom: -3px;
+  right: -3px;
+}
+.design-build-selection > i:nth-of-type(4) {
+  bottom: -3px;
+  left: -3px;
+}
+.design-cursor-travel {
+  position: absolute;
+  inset: 0;
+}
+.design-cursor {
+  position: absolute;
+  top: -2px;
+  left: -3px;
+  display: inline-flex;
+  align-items: flex-start;
+  color: var(--designer-color);
+  filter: drop-shadow(0 2px 2px #0002);
+}
+.design-cursor svg {
+  width: 20px;
+  height: 25px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.design-cursor::before {
+  content: "";
+  position: absolute;
+  top: -34px;
+  left: -34px;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--designer-color) 18%, transparent),
+    transparent 68%
+  );
+}
+.design-cursor > span {
+  padding: 5px 7px;
+  margin-top: 21px;
+  margin-left: -3px;
+  background: var(--designer-color);
+  color: var(--accent-foreground);
+  border-radius: 0 4px 4px;
+  font:
+    10px/1 var(--font-geist-mono),
+    monospace;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 8px #0002;
+}
+.design-light-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.design-light-sweep {
+  position: absolute;
+  top: -25%;
+  left: -50%;
+  width: 45%;
+  height: 150%;
+  background: linear-gradient(
+    108deg,
+    transparent 15%,
+    color-mix(in srgb, var(--accent) 2%, transparent) 35%,
+    color-mix(in srgb, var(--accent) 12%, transparent) 49%,
+    color-mix(in srgb, var(--accent) 24%, transparent) 50%,
+    color-mix(in srgb, var(--accent) 5%, transparent) 62%,
+    transparent 85%
+  );
+}
+.design-finish-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: 3px;
+  border: 1px solid color-mix(in srgb, var(--accent) 65%, var(--foreground));
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--accent) 9%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--accent) 3%, transparent);
+}
+@media (max-width: 767px) {
+  .design-style-cursor,
+  .design-polish-cursor {
+    display: none;
+  }
+  .design-frame-label {
+    font-size: 8px;
+    top: -20px;
+  }
+  .design-cursor svg {
+    width: 17px;
+    height: 21px;
+  }
+  .design-cursor > span {
+    font-size: 8px;
+    margin-top: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .design-build-layer {
+    display: none;
+  }
+  .design-reveal-content {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}

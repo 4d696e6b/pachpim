@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import {
   useEffect,
+  useId,
   useRef,
   useState,
   useSyncExternalStore,
@@ -18,11 +19,26 @@ import {
   type ReactNode,
 } from "react";
 import { motionTiming } from "@/lib/motion-timing";
+import { getCursorPersonality } from "@/lib/cursor-personality";
 
 const subscribe = () => () => {};
 const clientSnapshot = () => true;
 const serverSnapshot = () => false;
 const settleEase = cubicBezier(0.22, 1, 0.36, 1);
+
+// Each collaborator pauses briefly mid-task, then corrects its placement.
+// This is driven by the existing one-shot timeline, without extra timers.
+function cursorPhase(
+  value: number,
+  start: number,
+  speed: number,
+  hesitation: number,
+) {
+  const local = Math.max(0, Math.min(1, (value - start) / speed));
+  if (local < 0.4) return local * (0.45 / 0.4);
+  if (local < 0.4 + hesitation) return 0.45;
+  return 0.45 + ((local - 0.4 - hesitation) / (0.6 - hesitation)) * 0.55;
+}
 
 export function DesignMotion({ children }: { children: ReactNode }) {
   return <div className="design-page">{children}</div>;
@@ -44,6 +60,10 @@ export function DesignReveal({
   delay?: number;
 }) {
   const target = useRef<HTMLDivElement>(null);
+  const identity = useId();
+  const layout = getCursorPersonality(`${identity}:${label}`, "layout");
+  const stylist = getCursorPersonality(`${identity}:${label}`, "style");
+  const polish = getCursorPersonality(`${identity}:${label}`, "polish");
   const reduceMotion = useReducedMotion();
   const mounted = useSyncExternalStore(
     subscribe,
@@ -57,6 +77,15 @@ export function DesignReveal({
     amount: "some",
   });
   const progress = useMotionValue(0);
+  const layoutProgress = useTransform(progress, (value) =>
+    cursorPhase(value, layout.start, layout.speed, layout.hesitation),
+  );
+  const styleProgress = useTransform(progress, (value) =>
+    cursorPhase(value, stylist.start, stylist.speed, stylist.hesitation),
+  );
+  const polishProgress = useTransform(progress, (value) =>
+    cursorPhase(value, polish.start, polish.speed, polish.hesitation),
+  );
 
   useEffect(() => {
     if (!inView || reduceMotion || assembled) return;
@@ -69,8 +98,9 @@ export function DesignReveal({
       started = true;
       clearTimeout(introFallback);
       playback = animate(progress, 1, {
-        duration: motionTiming.assemble * (1 - progress.get()),
-        delay: Math.max(0, Math.min(delay * 1.5, 0.36)),
+        duration:
+          motionTiming.assemble * layout.assemblySpeed * (1 - progress.get()),
+        delay: Math.max(0, Math.min(delay * 1.5, 0.36)) + layout.assemblyDelay,
         ease: "linear",
         onComplete: () => setAssembled(true),
       });
@@ -92,7 +122,15 @@ export function DesignReveal({
       clearTimeout(introFallback);
       window.removeEventListener("portfolio:intro-complete", start);
     };
-  }, [inView, reduceMotion, assembled, delay, progress]);
+  }, [
+    inView,
+    reduceMotion,
+    assembled,
+    delay,
+    progress,
+    layout.assemblySpeed,
+    layout.assemblyDelay,
+  ]);
   const opacity = useTransform(progress, [0, 0.2, 0.56, 0.74], [0, 0, 0.92, 1]);
   const scale = useTransform(progress, [0, 0.22, 0.8], [0.95, 0.96, 1], {
     ease: settleEase,
@@ -125,10 +163,10 @@ export function DesignReveal({
     [0, 0.35, 0.45, 0.8, 0.99],
     [0, 0, 1, 1, 0],
   );
-  const frameX = useTransform(progress, [0.02, 0.34], [0.02, 1], {
+  const frameX = useTransform(layoutProgress, [0.02, 0.44], [0.02, 1], {
     ease: settleEase,
   });
-  const frameY = useTransform(progress, [0.02, 0.42], [0.03, 1], {
+  const frameY = useTransform(layoutProgress, [0.02, 0.58], [0.03, 1], {
     ease: settleEase,
   });
   const wireOpacity = useTransform(
@@ -137,39 +175,54 @@ export function DesignReveal({
     [0, 0.5, 0.5, 0],
   );
   const layoutX = useTransform(
-    progress,
-    [0.02, 0.34, 0.72, 1],
-    ["2%", "100%", "100%", "103%"],
+    layoutProgress,
+    [0, 0.38, 0.55, 0.85, 1],
+    ["2%", "60%", `${60 + layout.bendX}%`, "100%", "103%"],
     { ease: settleEase },
   );
   const layoutY = useTransform(
-    progress,
-    [0.02, 0.42, 0.72, 1],
-    ["3%", "100%", "100%", "103%"],
+    layoutProgress,
+    [0, 0.38, 0.55, 0.85, 1],
+    ["3%", "22%", `${22 + layout.bendY}%`, "100%", "103%"],
     { ease: settleEase },
   );
-  const styleX = useTransform(progress, [0.2, 0.62, 1], ["105%", "0%", "-2%"]);
-  const styleY = useTransform(progress, [0.2, 0.62, 1], ["10%", "62%", "65%"]);
+  const styleX = useTransform(
+    styleProgress,
+    [0, 0.36, 0.56, 0.85, 1],
+    ["105%", "55%", `${55 + stylist.bendX}%`, "4%", "-2%"],
+    { ease: settleEase },
+  );
+  const styleY = useTransform(
+    styleProgress,
+    [0, 0.36, 0.56, 0.85, 1],
+    ["10%", "26%", `${26 + stylist.bendY}%`, "62%", "65%"],
+    { ease: settleEase },
+  );
+  const layoutOpacity = useTransform(
+    layoutProgress,
+    [0, 0.07, 0.9, 1],
+    [0, 1, 1, 0],
+  );
   const styleOpacity = useTransform(
-    progress,
-    [0.18, 0.3, 0.76, 0.98],
+    styleProgress,
+    [0, 0.1, 0.88, 1],
     [0, 1, 1, 0],
   );
   const polishX = useTransform(
-    progress,
-    [0.48, 0.65, 0.84, 1],
-    ["12%", "40%", "92%", "100%"],
+    polishProgress,
+    [0, 0.4, 0.58, 0.86, 1],
+    ["12%", "35%", `${35 + polish.bendX}%`, "92%", "100%"],
     { ease: settleEase },
   );
   const polishY = useTransform(
-    progress,
-    [0.48, 0.65, 0.84, 1],
-    ["104%", "8%", "0%", "-3%"],
+    polishProgress,
+    [0, 0.4, 0.58, 0.86, 1],
+    ["104%", "20%", `${20 + polish.bendY}%`, "0%", "-3%"],
     { ease: settleEase },
   );
   const polishOpacity = useTransform(
-    progress,
-    [0.46, 0.55, 0.84, 0.98],
+    polishProgress,
+    [0, 0.1, 0.88, 1],
     [0, 1, 1, 0],
   );
   const lightX = useTransform(progress, [0.32, 0.88], ["0%", "360%"], {
@@ -248,7 +301,7 @@ export function DesignReveal({
           />
           <motion.div
             className="design-cursor-travel"
-            style={{ x: layoutX, y: layoutY, opacity: frameOpacity }}
+            style={{ x: layoutX, y: layoutY, opacity: layoutOpacity }}
           >
             <DesignerCursor label="Layout" color="var(--design-layout-color)" />
           </motion.div>

@@ -15,6 +15,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { motionTiming } from "@/lib/motion-timing";
+import { getCursorPersonality } from "@/lib/cursor-personality";
 
 type Phase = "idle" | "erase" | "waiting" | "build";
 type Piece = {
@@ -359,6 +360,21 @@ function TransitionFrame({
   const duration = isErasing ? motionTiming.erasePage : motionTiming.buildPage;
   const delay =
     index * (isErasing ? motionTiming.eraseStagger : motionTiming.buildStagger);
+  const role = (["layout", "style", "polish"] as const)[index % 3];
+  const personality = getCursorPersonality(
+    `${phase}:${index}:${Math.round(piece.width)}:${Math.round(piece.height)}`,
+    role,
+  );
+  const cursorDuration = duration * personality.speed;
+  const cursorDelay = delay + duration * personality.start;
+  const turnX = (isErasing ? 55 : 45) + personality.bendX;
+  const turnY = (isErasing ? 28 : 65) + personality.bendY;
+  const cursorEase =
+    role === "layout"
+      ? ([0.16, 1, 0.3, 1] as const)
+      : role === "style"
+        ? ([0.4, 0, 0.2, 1] as const)
+        : ([0.22, 0.7, 0.25, 1] as const);
   const color =
     index % 3 === 0
       ? "var(--accent)"
@@ -410,11 +426,28 @@ function TransitionFrame({
             opacity: 0,
           }}
           animate={{
-            x: isErasing ? ["100%", "0%", "-3%"] : ["0%", "100%", "102%"],
-            y: isErasing ? ["100%", "0%", "-3%"] : ["0%", "100%", "102%"],
-            opacity: [0, 1, 1, 0],
+            x: [
+              isErasing ? "100%" : "0%",
+              `${turnX}%`,
+              `${turnX}%`,
+              isErasing ? "2%" : "100%",
+              isErasing ? "-3%" : "102%",
+            ],
+            y: [
+              isErasing ? "100%" : "0%",
+              `${turnY}%`,
+              `${turnY}%`,
+              isErasing ? "0%" : "98%",
+              isErasing ? "-3%" : "102%",
+            ],
+            opacity: [0, 1, 1, 1, 0],
           }}
-          transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+          transition={{
+            duration: cursorDuration,
+            delay: cursorDelay,
+            times: [0, 0.32, 0.32 + personality.hesitation, 0.82, 1],
+            ease: cursorEase,
+          }}
         >
           <span className="design-cursor">
             <svg fill="currentColor" viewBox="0 0 24 28">
